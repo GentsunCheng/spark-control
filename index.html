@@ -3,7 +3,10 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Spark_Control</title>
+		<link rel="icon" href="assets/logo.ico" type="image/x-icon" />
+		<link rel="shortcut icon" href="assets/logo.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="css/button.css" />
+		<link rel="stylesheet" href="css/font.min.css" />
 		<style>
 			.container {
 				display: flex;
@@ -41,6 +44,17 @@
 				margin-top: 20px;
 				overflow-y: scroll;
 			}
+
+			.buttons-container {
+				display: flex;
+				justify-content: center;
+				align-items: flex-start;
+				margin-top: 20px;
+			}
+
+			.buttons-container > button {
+				margin-left: 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -48,41 +62,45 @@
 			<div class="direction-buttons">
 				<button class="fluent-button" id="upButton">
 					<span class="icon"></span>
-                    <span class="button-text">&#8593;</span>
+					<span class="button-text">&#8593;</span>
 				</button>
 			</div>
 			<div class="direction-buttons">
 				<button class="fluent-button" id="leftButton">
 					<span class="icon"></span>
-                    <span class="button-text">&#8592;</span>
+					<span class="button-text">&#8592;</span>
 				</button>
 				<button class="fluent-button brake-button" id="brakeButton">
 					<span class="icon"></span>
-                    <span class="button-text">&#9632;</span>
+					<span class="button-text">&#9632;</span>
 				</button>
 				<button class="fluent-button" id="rightButton">
 					<span class="icon"></span>
-                    <span class="button-text">&#8594;</span>
+					<span class="button-text">&#8594;</span>
 				</button>
 			</div>
 			<div class="direction-buttons">
 				<button class="fluent-button" id="downButton">
 					<span class="icon"></span>
-                    <span class="button-text">&#8595;</span>
+					<span class="button-text">&#8595;</span>
 				</button>
 			</div>
-			<div class="center">
+			<div class="buttons-container">
 				<button class="fluent-button" id="grabButton">
 					<span class="icon"></span>
-                    <span class="button-text">抓</span>
+					<span class="button-text">抓</span>
 				</button>
 				<button class="fluent-button" id="releaseButton">
 					<span class="icon"></span>
-                    <span class="button-text">放</span>
+					<span class="button-text">放</span>
 				</button>
-                <button class="fluent-button" id="speedButton">
+				<button class="fluent-button" id="speedButton">
 					<span class="icon"></span>
-                    <span class="button-text">速度</span>
+					<span class="button-text">速度</span>
+				</button>
+				<button class="fluent-button" id="resetButton">
+					<span class="icon"></span>
+					<span class="button-text">复位</span>
 				</button>
 			</div>
 			<div class="message-box" id="messageBox"></div>
@@ -90,5 +108,14 @@
 		<script src="js/eventemitter3.js"></script>
 		<script src="js/roslib.min.js"></script>
 		<script src="js/button.js"></script>
+		<script>
+			const { ipcRenderer } = require("electron");
+			// 监听执行按钮的点击事件
+			const executeButton = document.getElementById("resetButton");
+			executeButton.addEventListener("click", () => {
+				// 发送执行 SSH 命令的请求给主进程
+				ipcRenderer.send("execute-ssh-command", "resetarm");
+			});
+		</script>
 	</body>
 </html>

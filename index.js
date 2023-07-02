@@ -1,24 +1,68 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
+const { exec } = require("child_process");
 const path = require("path");
 
 // 创建窗口方法
 const createWindow = () => {
+    const menu = Menu.buildFromTemplate([]);
+    Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
-		width: 800,
-		height: 1000,
+		width: 400,
+		height: 600,
+		webPreferences: {
+			nodeIntegration: true,
+			contextIsolation: true, // 允许在渲染进程中使用 require 和其他 Electron API
+		},
 	});
 	win.loadFile("index.html");
 };
 
 // 设置应用图标
-const iconPath = path.join(__dirname, "assets", "icon.png");
+const iconPath = path.join(__dirname, "assets", "logo.ico");
 app.whenReady().then(() => {
-	app.dock.setIcon(iconPath);
+	if (app.isReady() && app.dock) {
+		app.dock.setIcon(iconPath);
+	}
 });
 
 // 在 app 就绪后创建窗口
 app.whenReady().then(() => {
-	createWindow();
+    createWindow();
+
+	// 注册键盘事件
+	const { webContents } = BrowserWindow.getAllWindows()[0];
+	webContents.on("before-input-event", (event, input) => {
+		if (input.control && input.key.toLowerCase() === "r") {
+			// 执行 SSH 命令
+			exec('ssh spark@192.168.3.9 "resetarm"', (error, stdout, stderr) => {
+				if (error) {
+					console.error(`执行 SSH 命令时出错: ${error.message}`);
+					return;
+				}
+				if (stderr) {
+					console.error(`SSH 命令的标准错误输出: ${stderr}`);
+					return;
+				}
+				console.log(`SSH 命令的标准输出: ${stdout}`);
+			});
+		}
+	});
 });
 
-// 其他应用程序生命周期事件和代码...
+// 监听来自渲染进程的 SSH 命令执行请求
+ipcMain.on("execute-ssh-command", (event, command) => {
+	exec(`ssh spark@192.168.3.9 "${command}"`, (error, stdout, stderr) => {
+		if (error) {
+			console.error(`执行 SSH 命令时出错: ${error.message}`);
+			event.reply("ssh-command-executed", { error: error.message });
+			return;
+		}
+		if (stderr) {
+			console.error(`SSH 命令的标准错误输出: ${stderr}`);
+			event.reply("ssh-command-executed", { error: stderr });
+			return;
+		}
+		console.log(`SSH 命令的标准输出: ${stdout}`);
+		event.reply("ssh-command-executed", { stdout });
+	});
+});

@@ -21,5 +21,8 @@
         "directories": {
             "output": "dist"
         }
+    },
+    "dependencies": {
+        "electron-localshortcut": "^3.2.1"
     }
 }
