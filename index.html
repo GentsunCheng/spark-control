@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Spark_Control</title>
+		<link rel="stylesheet" type="text/css" href="css/button.css" />
+		<style>
+			.container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+			}
+			.center {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.brake-button {
+				margin-bottom: 20px;
+			}
+
+			.direction-buttons {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.direction-buttons > button {
+				margin: 10px;
+			}
+
+			.message-box {
+				width: 300px;
+				height: 200px;
+				border: 1px solid #ccc;
+				padding: 10px;
+				margin-top: 20px;
+				overflow-y: scroll;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="direction-buttons">
+				<button class="fluent-button" id="upButton">
+					<span class="icon"></span>
+                    <span class="button-text">&#8593;</span>
+				</button>
+			</div>
+			<div class="direction-buttons">
+				<button class="fluent-button" id="leftButton">
+					<span class="icon"></span>
+                    <span class="button-text">&#8592;</span>
+				</button>
+				<button class="fluent-button brake-button" id="brakeButton">
+					<span class="icon"></span>
+                    <span class="button-text">&#9632;</span>
+				</button>
+				<button class="fluent-button" id="rightButton">
+					<span class="icon"></span>
+                    <span class="button-text">&#8594;</span>
+				</button>
+			</div>
+			<div class="direction-buttons">
+				<button class="fluent-button" id="downButton">
+					<span class="icon"></span>
+                    <span class="button-text">&#8595;</span>
+				</button>
+			</div>
+			<div class="center">
+				<button class="fluent-button" id="grabButton">
+					<span class="icon"></span>
+                    <span class="button-text">抓</span>
+				</button>
+				<button class="fluent-button" id="releaseButton">
+					<span class="icon"></span>
+                    <span class="button-text">放</span>
+				</button>
+                <button class="fluent-button" id="speedButton">
+					<span class="icon"></span>
+                    <span class="button-text">速度</span>
+				</button>
+			</div>
+			<div class="message-box" id="messageBox"></div>
+		</div>
+		<script src="js/eventemitter3.js"></script>
+		<script src="js/roslib.min.js"></script>
+		<script src="js/button.js"></script>
+	</body>
+</html>
