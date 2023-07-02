@@ -1,17 +1,18 @@
-const { app, BrowserWindow, ipcMain, Menu } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const { exec } = require("child_process");
 const path = require("path");
 
 // 创建窗口方法
 const createWindow = () => {
-    const menu = Menu.buildFromTemplate([]);
-    Menu.setApplicationMenu(menu);
+	const menu = Menu.buildFromTemplate([]);
+	Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
 		width: 400,
 		height: 600,
 		webPreferences: {
 			nodeIntegration: true,
-			contextIsolation: true, // 允许在渲染进程中使用 require 和其他 Electron API
+			contextIsolation: false, // 允许在渲染进程中使用 require 和其他 Electron API
+			preload: path.join(__dirname, "preload.js"), // 预加载脚本路径
 		},
 	});
 	win.loadFile("index.html");
@@ -27,7 +28,7 @@ app.whenReady().then(() => {
 
 // 在 app 就绪后创建窗口
 app.whenReady().then(() => {
-    createWindow();
+	createWindow();
 
 	// 注册键盘事件
 	const { webContents } = BrowserWindow.getAllWindows()[0];

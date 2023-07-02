@@ -102,7 +102,7 @@ function handleButtonClick(event) {
 function handleKeyPress(event) {
 	if (brakeActive) {
 		key_in = event.key;
-		if (key_in == " ") return; // 刹车状态下不执行按键操作
+		if (key_in == "Space") return; // 刹车状态下不执行按键操作
 		else {
 			brakeActive = false;
 		}
@@ -141,13 +141,13 @@ function handleKeyPress(event) {
 			simulateButtonClick(releaseButton);
 			sendMessage("0");
 			break;
-		case " ":
+		case "Space":
 			// 执行刹车的操作
 			simulateButtonClick(brakeButton);
 			sendMessage("break");
 			brakeActive = true; // 设置刹车状态为真
 			break;
-		case ".":
+		case "Shift":
 			// 速度切换操作
 			if (speed_mod == 1) {
 				speed_mod = 0;
@@ -155,8 +155,8 @@ function handleKeyPress(event) {
 				speed_mod = 1;
 			}
 			sendMessage("");
-            break;
-        // 层数调整
+			break;
+		// 层数调整
 		case "ArrowUp":
 			if (step < 3) {
 				step++;
@@ -168,25 +168,22 @@ function handleKeyPress(event) {
 				step--;
 			}
 			sendMessage(10 + step);
-            break;
-        // 第四关节调整
-        case "ArrowLeft":
+			break;
+		// 第四关节调整
+		case "ArrowLeft":
 			sendMessage(41);
 			break;
 		case "ArrowRight":
 			sendMessage(43);
-            break;
-        //备用状态
-        case "-":
-            sendMessage(201);
-            break;
-        case "+":
-            sendMessage(200);
-            break;
-        //其他状态
-        case "r":
-            sendMessage(403);
-            break;
+			break;
+		//备用状态
+		case "Enter":
+			sendMessage(200);
+			break;
+		//其他状态
+		case "r":
+			sendMessage(403);
+			break;
 		case "q":
 			ros.close();
 			constat = "已断开";
@@ -249,24 +246,18 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("第四关节右");
-	} else if (data == 201) {
-		const message = new ROSLIB.Message({
-			data: "201",
-		});
-		publisher.publish(message);
-		console.log("备用状态位姿");
 	} else if (data == 200) {
 		const message = new ROSLIB.Message({
 			data: "200",
 		});
 		publisher.publish(message);
 		console.log("备用状态抓");
-    } else if (data == 403) {
-        const message = new ROSLIB.Message({
-            data: "403",
-        });
-        publisher.publish(message);
-    }
+	} else if (data == 403) {
+		const message = new ROSLIB.Message({
+			data: "403",
+		});
+		publisher.publish(message);
+	}
 
 	if (data == "break") {
 		var twist = new ROSLIB.Message({
@@ -356,16 +347,25 @@ function sendMessage(data) {
 
 // 循环显示状态
 function loopFunction() {
-	messageBox.innerHTML =
-		"ROS连接状态: " +
-		constat +
-		"</br>" +
-		"速度: " +
-		speed_mod +
-		"</br>" +
-		"层数: " +
-		step;
+	let colorStyle;
+	if (constat === "未就绪") {
+		colorStyle = "color: blue;";
+	} else if (constat === "已连接") {
+		colorStyle = "color: green;";
+	} else if (constat === "已断开") {
+		colorStyle = "color: red;";
+	} else {
+		colorStyle = "";
+	}
+
+	// 更新 ROS 连接状态元素的内容和样式
+	const rosStatusElement = document.getElementById("rosStatus");
+	rosStatusElement.innerHTML = `ROS连接状态: <span style="${colorStyle}">${constat}</span>`;
+	messageBox.innerHTML = "速度: " + speed_mod + "</br>" + "层数: " + step;
 }
+
+// 调用 loopFunction() 更新状态
+loopFunction();
 
 // 添加事件监听
 upButton.addEventListener("click", handleButtonClick);
