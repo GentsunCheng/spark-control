@@ -15,6 +15,21 @@ var ros = new ROSLIB.Ros({
 	url: "ws://192.168.3.9:9090",
 });
 
+ros.on("connection", function () {
+	console.log("Connected to websocket server.");
+	constat = "已连接";
+});
+
+ros.on("error", function (error) {
+	console.log("Error connecting to websocket server: ", error);
+	constat = "连接错误";
+});
+
+ros.on("close", function () {
+	console.log("Connection to websocket server closed.");
+	constat = "已断开";
+});
+
 // 抓取和释放
 var publisher = new ROSLIB.Topic({
 	ros: ros,
@@ -30,15 +45,15 @@ var cmdVel = new ROSLIB.Topic({
 });
 
 var speed_mod = 1;
+var step = 1;
 var brakeActive = false;
-var stat = "静止";
-messageBox.innerHTML += "速度: " + speed_mod + "</br>" + "状态: " + stat;
+var constat = "未就绪";
 // 每隔一定时间执行一次循环体代码
 var intervalId = setInterval(loopFunction, 100); // 间隔时间为 100 毫秒
 
 // 按钮点击事件处理函数
 function handleButtonClick(event) {
-	const buttonId = event.target.id;
+	buttonId = event.target.id;
 
 	// 根据按钮的id执行相应操作
 	switch (buttonId) {
@@ -69,17 +84,16 @@ function handleButtonClick(event) {
 		case "brakeButton":
 			// 执行刹车的操作
 			sendMessage("break");
-            break;
-        case "speedButton":
-            // 执行速度切换的操作
-            if (speed_mod == 1) {
-                speed_mod = 0;
-            } else {
-                speed_mod = 1;
-            }
-            break;
+			break;
+		case "speedButton":
+			// 执行速度切换的操作
+			if (speed_mod == 1) {
+				speed_mod = 0;
+			} else {
+				speed_mod = 1;
+			}
+			break;
 		default:
-			stat = "静止";
 			break;
 	}
 }
@@ -87,13 +101,13 @@ function handleButtonClick(event) {
 // 键盘按键事件处理函数
 function handleKeyPress(event) {
 	if (brakeActive) {
-		const key_in = event.key;
+		key_in = event.key;
 		if (key_in == " ") return; // 刹车状态下不执行按键操作
 		else {
 			brakeActive = false;
 		}
 	}
-	const key = event.key;
+	key = event.key;
 
 	// 根据按键执行相应操作
 	switch (key) {
@@ -141,9 +155,43 @@ function handleKeyPress(event) {
 				speed_mod = 1;
 			}
 			sendMessage("");
+            break;
+        // 层数调整
+		case "ArrowUp":
+			if (step < 3) {
+				step++;
+			}
+			sendMessage(10 + step);
+			break;
+		case "ArrowDown":
+			if (step > 1) {
+				step--;
+			}
+			sendMessage(10 + step);
+            break;
+        // 第四关节调整
+        case "ArrowLeft":
+			sendMessage(41);
+			break;
+		case "ArrowRight":
+			sendMessage(43);
+            break;
+        //备用状态
+        case "-":
+            sendMessage(201);
+            break;
+        case "+":
+            sendMessage(200);
+            break;
+        //其他状态
+        case "r":
+            sendMessage(403);
+            break;
+		case "q":
+			ros.close();
+			constat = "已断开";
 			break;
 		default:
-			stat = "静止";
 			break;
 	}
 }
@@ -159,33 +207,67 @@ function simulateButtonClick(button) {
 
 // 发送消息到 ROS WebSocket
 function sendMessage(data) {
-	ros.on("connection", function () {
-		console.log("Connected to websocket server.");
-	});
-
-	ros.on("error", function (error) {
-		console.log("Error connecting to websocket server: ", error);
-	});
-
-	ros.on("close", function () {
-		console.log("Connection to websocket server closed.");
-	});
-
 	if (data == "g") {
 		const message = new ROSLIB.Message({
 			data: "0",
 		});
 		publisher.publish(message);
 		console.log("抓取");
-		stat = "抓取";
 	} else if (data == "0") {
 		const message = new ROSLIB.Message({
 			data: "10",
 		});
 		publisher.publish(message);
 		console.log("放置");
-		stat = "放置";
-	}
+	} else if (data == 11) {
+		const message = new ROSLIB.Message({
+			data: "11",
+		});
+		publisher.publish(message);
+		console.log("层数调整");
+	} else if (data == 12) {
+		const message = new ROSLIB.Message({
+			data: "12",
+		});
+		publisher.publish(message);
+		console.log("层数调整");
+	} else if (data == 13) {
+		const message = new ROSLIB.Message({
+			data: "13",
+		});
+		publisher.publish(message);
+		console.log("层数调整");
+	} else if (data == 41) {
+		const message = new ROSLIB.Message({
+			data: "41",
+		});
+		publisher.publish(message);
+		console.log("第四关节左");
+	} else if (data == 43) {
+		const message = new ROSLIB.Message({
+			data: "43",
+		});
+		publisher.publish(message);
+		console.log("第四关节右");
+	} else if (data == 201) {
+		const message = new ROSLIB.Message({
+			data: "201",
+		});
+		publisher.publish(message);
+		console.log("备用状态位姿");
+	} else if (data == 200) {
+		const message = new ROSLIB.Message({
+			data: "200",
+		});
+		publisher.publish(message);
+		console.log("备用状态抓");
+    } else if (data == 403) {
+        const message = new ROSLIB.Message({
+            data: "403",
+        });
+        publisher.publish(message);
+    }
+
 	if (data == "break") {
 		var twist = new ROSLIB.Message({
 			linear: {
@@ -199,7 +281,6 @@ function sendMessage(data) {
 				z: 0,
 			},
 		});
-		stat = "刹车";
 		cmdVel.publish(twist);
 	} else if (data != "break") {
 		if (speed_mod) {
@@ -223,7 +304,6 @@ function sendMessage(data) {
 						z: 0,
 					},
 				});
-				stat = "前进";
 				break;
 			case "s":
 				var twist = new ROSLIB.Message({
@@ -238,7 +318,6 @@ function sendMessage(data) {
 						z: 0,
 					},
 				});
-				stat = "后退";
 				break;
 			case "a":
 				var twist = new ROSLIB.Message({
@@ -253,7 +332,6 @@ function sendMessage(data) {
 						z: yam,
 					},
 				});
-				stat = "左转";
 				break;
 			case "d":
 				var twist = new ROSLIB.Message({
@@ -268,7 +346,6 @@ function sendMessage(data) {
 						z: -yam,
 					},
 				});
-				stat = "右转";
 				break;
 			default:
 				break;
@@ -279,8 +356,15 @@ function sendMessage(data) {
 
 // 循环显示状态
 function loopFunction() {
-	messageBox.innerHTML = "";
-	messageBox.innerHTML += "速度: " + speed_mod + "</br>" + "状态: " + stat;
+	messageBox.innerHTML =
+		"ROS连接状态: " +
+		constat +
+		"</br>" +
+		"速度: " +
+		speed_mod +
+		"</br>" +
+		"层数: " +
+		step;
 }
 
 // 添加事件监听
