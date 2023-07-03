@@ -23,6 +23,8 @@
         }
     },
     "dependencies": {
-        "electron-localshortcut": "^3.2.1"
+        "electron-cookies": "^1.1.0",
+        "electron-localshortcut": "^3.2.1",
+        "electron-prompt": "^1.7.0"
     }
 }

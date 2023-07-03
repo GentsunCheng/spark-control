@@ -7,42 +7,58 @@ const grabButton = document.getElementById("grabButton");
 const releaseButton = document.getElementById("releaseButton");
 const brakeButton = document.getElementById("brakeButton");
 const speedButton = document.getElementById("speedButton");
+const defaultButton = document.getElementById("defaultButton");
+const resetButton = document.getElementById("resetButton");
+const arrowUp = document.getElementById("arrowUp");
+const arrowDown = document.getElementById("arrowDown");
+const arrowLeft = document.getElementById("arrowLeft");
+const arrowRight = document.getElementById("arrowRight");
 
-// Create
+// messageBox
 var messageBox = document.getElementById("messageBox");
-// 初始化ROS
-var ros = new ROSLIB.Ros({
-	url: "ws://192.168.3.9:9090",
-});
 
-ros.on("connection", function () {
-	console.log("Connected to websocket server.");
-	constat = "已连接";
-});
-
-ros.on("error", function (error) {
-	console.log("Error connecting to websocket server: ", error);
-	constat = "连接错误";
-});
-
-ros.on("close", function () {
-	console.log("Connection to websocket server closed.");
-	constat = "已断开";
-});
-
-// 抓取和释放
-var publisher = new ROSLIB.Topic({
-	ros: ros,
-	name: "/grasp",
-	messageType: "std_msgs/String",
-});
-
-// 底盘控制
-var cmdVel = new ROSLIB.Topic({
-	ros: ros,
-	name: "/cmd_vel",
-	messageType: "geometry_msgs/Twist",
-});
+// ip地址输入
+var ipaddr = "";
+var ros = null;
+var publisher = null;
+var cmdVel = null;
+// 更新全局变量的函数
+function updateGlobalVariable() {
+	// 获取输入框的值
+	var input = document.getElementById("inputField");
+	// 将输入的值赋给全局变量
+	ipaddr = input.value;
+	// 打印全局变量的值
+	console.log("IP Addr：" + ipaddr);
+	// 初始化ROS
+	ros = new ROSLIB.Ros({
+		url: "ws://" + ipaddr + ":9090",
+	});
+	ros.on("connection", function () {
+		console.log("Connected to websocket server.");
+		constat = "已连接";
+	});
+	ros.on("error", function (error) {
+		console.log("Error connecting to websocket server: ", error);
+		constat = "连接错误";
+	});
+	ros.on("close", function () {
+		console.log("Connection to websocket server closed.");
+		constat = "已断开";
+	});
+	// 抓取和释放
+	publisher = new ROSLIB.Topic({
+		ros: ros,
+		name: "/grasp",
+		messageType: "std_msgs/String",
+	});
+	// 底盘控制
+	cmdVel = new ROSLIB.Topic({
+		ros: ros,
+		name: "/cmd_vel",
+		messageType: "geometry_msgs/Twist",
+	});
+}
 
 var speed_mod = 1;
 var step = 1;
@@ -93,6 +109,33 @@ function handleButtonClick(event) {
 				speed_mod = 1;
 			}
 			break;
+		case "defaultButton":
+			step = 1;
+			sendMessage(403);
+			break;
+		case "resetButton":
+			ipcRenderer.send("execute-ssh-command", ipaddr, "resetarm");
+			break;
+		case "arrowUp":
+			// 执行向上的操作
+			if (step < 3) {
+				step++;
+			}
+			sendMessage(10 + step);
+			break;
+		case "arrowDown":
+			// 执行向下的操作
+			if (step > 0) {
+				step--;
+			}
+			sendMessage(10 + step);
+			break;
+		case "arrowLeft":
+			sendMessage(41);
+			break;
+		case "arrowRight":
+			sendMessage(43);
+			break;
 		default:
 			break;
 	}
@@ -141,7 +184,7 @@ function handleKeyPress(event) {
 			simulateButtonClick(releaseButton);
 			sendMessage("0");
 			break;
-		case "Space":
+		case " ":
 			// 执行刹车的操作
 			simulateButtonClick(brakeButton);
 			sendMessage("break");
@@ -182,7 +225,11 @@ function handleKeyPress(event) {
 			break;
 		//其他状态
 		case "r":
+			step = 1;
 			sendMessage(403);
+			break;
+		case "Alt":
+			ipcRenderer.send("execute-ssh-command", ipaddr, "resetarm");
 			break;
 		case "q":
 			ros.close();
@@ -257,6 +304,7 @@ function sendMessage(data) {
 			data: "403",
 		});
 		publisher.publish(message);
+		console.log("默认位姿");
 	}
 
 	if (data == "break") {
@@ -376,6 +424,12 @@ grabButton.addEventListener("click", handleButtonClick);
 releaseButton.addEventListener("click", handleButtonClick);
 brakeButton.addEventListener("click", handleButtonClick);
 speedButton.addEventListener("click", handleButtonClick);
+defaultButton.addEventListener("click", handleButtonClick);
+resetButton.addEventListener("click", handleButtonClick);
+arrowUp.addEventListener("click", handleButtonClick);
+arrowDown.addEventListener("click", handleButtonClick);
+arrowLeft.addEventListener("click", handleButtonClick);
+arrowRight.addEventListener("click", handleButtonClick);
 
 // 添加键盘按键事件监听器
 document.addEventListener("keydown", handleKeyPress);
