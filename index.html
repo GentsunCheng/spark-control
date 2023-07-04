@@ -23,6 +23,7 @@
 		<div class="container">
 			<div class="status-bar">
 				<span id="rosStatus"></span>
+                <span id="armStatus"></span>
 			</div>
         </br>
         </br>
@@ -32,7 +33,11 @@
         <span class="black-bold">[↑↓]切换堆放层数 [←→]调整吸盘转动</span>
 		<div class="container">
             <input type="text" class="inputText" id="inputField" placeholder="输入IP">
-            <button class="btn btn-success" onclick="updateGlobalVariable()">连接</button>
+            </br>
+            <button class="btn btn-success" onclick="updateGlobalVariable()">
+                <span class="icon"></span>
+                <span class="button-text">连接</span>
+            </button>
 			<div class="direction-buttons">
 				<button class="btn btn-primary" id="upButton">
 					<span class="icon"></span>
@@ -81,12 +86,14 @@
 					<span class="button-text orange-text">复位</span>
 				</button>
 			</div>
+            </br>
             <div class="direction-buttons">
                 <div class="vertical-buttons">
                   <button class="btn btn-primary" id="arrowUp">
                     <span class="icon"></span>
 					<span class="button-text">&#9652;</span>
                   </button>
+                  </br>
                   <button class="btn btn-primary" id="arrowDown">
                     <span class="icon"></span>
 					<span class="button-text">&#9662;</span>

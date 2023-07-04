@@ -13,15 +13,36 @@ const arrowUp = document.getElementById("arrowUp");
 const arrowDown = document.getElementById("arrowDown");
 const arrowLeft = document.getElementById("arrowLeft");
 const arrowRight = document.getElementById("arrowRight");
+const net = require("net");
 
-// messageBox
 var messageBox = document.getElementById("messageBox");
-
-// ip地址输入
 var ipaddr = "";
 var ros = null;
+var socket = new net.Socket();
 var publisher = null;
 var cmdVel = null;
+var walk_vel = 0.2;
+var run_vel = 1.3;
+var yaw_rate = 0.2;
+var yaw_rate_run = 1.3;
+var yam = 0.0;
+var run = 0.0;
+var angle1st = 90.0;
+var angle3rd = 90.0;
+var keyState = {
+	w: false,
+	s: false,
+	a: false,
+	d: false,
+	space: false,
+};
+var speed_mod = 1;
+var step = 1;
+var brakeActive = false;
+var constat = "未就绪";
+var wscs = "未就绪";
+// 每隔一定时间执行一次循环体代码
+var intervalId = setInterval(loopFunction, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
 function updateGlobalVariable() {
 	// 获取输入框的值
@@ -58,14 +79,25 @@ function updateGlobalVariable() {
 		name: "/cmd_vel",
 		messageType: "geometry_msgs/Twist",
 	});
-}
 
-var speed_mod = 1;
-var step = 1;
-var brakeActive = false;
-var constat = "未就绪";
-// 每隔一定时间执行一次循环体代码
-var intervalId = setInterval(loopFunction, 100); // 间隔时间为 100 毫秒
+	// ARM初始化
+	socket.connect(8801, ipaddr, function () {
+		console.log("Connected to server");
+		socket.write("verify");
+	});
+	// 接收服务端发送的数据
+	socket.on("data", function (data) {
+		console.log("Received: " + data);
+		if (data.toString() === "OK") {
+			wscs = "已连接";
+		}
+	});
+	// 处理错误事件
+	socket.on("error", function (err) {
+		console.log("Error: " + err.message);
+		wscs = "连接错误";
+	});
+}
 
 // 按钮点击事件处理函数
 function handleButtonClick(event) {
@@ -75,19 +107,29 @@ function handleButtonClick(event) {
 	switch (buttonId) {
 		case "upButton":
 			// 执行向上的操作
-			sendMessage("w");
+			run = 1.0;
+			sendMessage("run");
 			break;
 		case "downButton":
 			// 执行向下的操作
-			sendMessage("s");
+			run = -1.0;
+			sendMessage("run");
 			break;
 		case "leftButton":
 			// 执行向左的操作
-			sendMessage("a");
+			yam = 1.0;
+			sendMessage("run");
 			break;
 		case "rightButton":
 			// 执行向右的操作
-			sendMessage("d");
+			yam = -1.0;
+			sendMessage("run");
+			break;
+		case "brakeButton":
+			// 执行刹车的操作
+			run = 0.0;
+			yam = 0.0;
+			sendMessage("run");
 			break;
 		case "grabButton":
 			// 执行抓取的操作
@@ -96,10 +138,6 @@ function handleButtonClick(event) {
 		case "releaseButton":
 			// 执行放置的操作
 			sendMessage("0");
-			break;
-		case "brakeButton":
-			// 执行刹车的操作
-			sendMessage("break");
 			break;
 		case "speedButton":
 			// 执行速度切换的操作
@@ -110,11 +148,10 @@ function handleButtonClick(event) {
 			}
 			break;
 		case "defaultButton":
-			step = 1;
 			sendMessage(403);
 			break;
 		case "resetButton":
-			ipcRenderer.send("execute-ssh-command", ipaddr, "resetarm");
+			socket.write("reset");
 			break;
 		case "arrowUp":
 			// 执行向上的操作
@@ -125,7 +162,7 @@ function handleButtonClick(event) {
 			break;
 		case "arrowDown":
 			// 执行向下的操作
-			if (step > 0) {
+			if (step > 1) {
 				step--;
 			}
 			sendMessage(10 + step);
@@ -141,64 +178,27 @@ function handleButtonClick(event) {
 	}
 }
 
-// 键盘按键事件处理函数
-function handleKeyPress(event) {
-	if (brakeActive) {
-		key_in = event.key;
-		if (key_in == "Space") return; // 刹车状态下不执行按键操作
-		else {
-			brakeActive = false;
-		}
-	}
-	key = event.key;
+function handleKeyDown(event) {
+	var keydown = event.key;
 
-	// 根据按键执行相应操作
-	switch (key) {
-		case "w":
-			// 执行向上的操作
-			simulateButtonClick(upButton);
-			sendMessage("w");
-			break;
-		case "s":
-			// 执行向下的操作
-			simulateButtonClick(downButton);
-			sendMessage("s");
-			break;
-		case "a":
-			// 执行向左的操作
-			simulateButtonClick(leftButton);
-			sendMessage("a");
-			break;
-		case "d":
-			// 执行向右的操作
-			simulateButtonClick(rightButton);
-			sendMessage("d");
-			break;
-		case "g":
-			// 执行抓取的操作
-			simulateButtonClick(grabButton);
-			sendMessage("g");
-			break;
-		case "0":
-			// 执行放置的操作
-			simulateButtonClick(releaseButton);
-			sendMessage("0");
-			break;
-		case " ":
-			// 执行刹车的操作
-			simulateButtonClick(brakeButton);
-			sendMessage("break");
-			brakeActive = true; // 设置刹车状态为真
-			break;
-		case "Shift":
-			// 速度切换操作
-			if (speed_mod == 1) {
-				speed_mod = 0;
-			} else {
-				speed_mod = 1;
-			}
-			sendMessage("");
-			break;
+	if (keydown == "w") {
+		keyState.w = true;
+	}
+	if (keydown == "s") {
+		keyState.s = true;
+	}
+	if (keydown == "a") {
+		keyState.a = true;
+	}
+	if (keydown == "d") {
+		keyState.d = true;
+	}
+	if (keydown == " ") {
+		keyState.space = true;
+	}
+	checkMultipleKeys();
+
+	switch (keydown) {
 		// 层数调整
 		case "ArrowUp":
 			if (step < 3) {
@@ -219,25 +219,115 @@ function handleKeyPress(event) {
 		case "ArrowRight":
 			sendMessage(43);
 			break;
+		case "8":
+			if (angle3rd > 0) angle3rd--;
+			socket.write("angle3rd+" + angle3rd);
+			break;
+		case "5":
+			if (angle3rd < 180) angle3rd++;
+			socket.write("angle3rd+" + angle3rd);
+			break;
+		case "4":
+			if (angle1st < 180) angle1st++;
+			socket.write("angle1st+" + angle1st);
+			break;
+		case "6":
+			if (angle1st > 0) angle1st--;
+			socket.write("angle1st+" + angle1st);
+			break;
+		default:
+			break;
+	}
+}
+
+function handleKeyUp(event) {
+	var keyup = event.key;
+
+	if (keyup == "w") {
+		keyState.w = false;
+	}
+	if (keyup == "s") {
+		keyState.s = false;
+	}
+	if (keyup == "a") {
+		keyState.a = false;
+	}
+	if (keyup == "d") {
+		keyState.d = false;
+	}
+	if (keyup == " ") {
+		keyState.space = false;
+	}
+	checkMultipleKeys();
+
+	switch (keyup) {
+		case "g":
+			// 执行抓取的操作
+			simulateButtonClick(grabButton);
+			sendMessage("g");
+			break;
+		case "0":
+			// 执行放置的操作
+			simulateButtonClick(releaseButton);
+			sendMessage("0");
+			break;
+		case "Shift":
+			// 速度切换操作
+			if (speed_mod == 1) {
+				speed_mod = 0;
+			} else {
+				speed_mod = 1;
+			}
+			sendMessage("");
+			break;
 		//备用状态
 		case "Enter":
 			sendMessage(200);
 			break;
 		//其他状态
 		case "r":
-			step = 1;
 			sendMessage(403);
 			break;
 		case "Alt":
-			ipcRenderer.send("execute-ssh-command", ipaddr, "resetarm");
+			socket.write("reset");
 			break;
 		case "q":
 			ros.close();
 			constat = "已断开";
+			wscs = "已断开";
+			socket.write("exit");
 			break;
 		default:
 			break;
 	}
+}
+
+function checkMultipleKeys() {
+	if (keyState.w) {
+		run = 1.0;
+	}
+	if (keyState.s) {
+		run = -1.0;
+	}
+	if (keyState.a) {
+		if (keyState.w) {
+			yam = 1.0;
+		} else if (keyState.s) {
+			yam = -1.0;
+		}
+	}
+	if (keyState.d) {
+		if (keyState.w) {
+			yam = -1.0;
+		} else if (keyState.s) {
+			yam = 1.0;
+		}
+	}
+	if (keyState.space) {
+		run = 0.0;
+		yam = 0.0;
+	}
+	sendMessage("run");
 }
 
 // 模拟按钮点击效果
@@ -305,110 +395,62 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("默认位姿");
-	}
-
-	if (data == "break") {
+	} else if (data == "run") {
+		if (speed_mod) {
+			run_data = run * run_vel;
+			yam_data = yam * yaw_rate_run;
+		} else {
+			run_data = run * walk_vel;
+			yam_data = yam * yaw_rate;
+		}
 		var twist = new ROSLIB.Message({
 			linear: {
-				x: 0,
+				x: run_data,
 				y: 0,
 				z: 0,
 			},
 			angular: {
 				x: 0,
 				y: 0,
-				z: 0,
+				z: yam_data,
 			},
 		});
 		cmdVel.publish(twist);
-	} else if (data != "break") {
-		if (speed_mod) {
-			var walk = 0.26;
-			var yam = 1;
-		} else {
-			var walk = 0.04;
-			var yam = 0.2;
-		}
-		switch (data) {
-			case "w":
-				var twist = new ROSLIB.Message({
-					linear: {
-						x: walk,
-						y: 0,
-						z: 0,
-					},
-					angular: {
-						x: 0,
-						y: 0,
-						z: 0,
-					},
-				});
-				break;
-			case "s":
-				var twist = new ROSLIB.Message({
-					linear: {
-						x: -walk,
-						y: 0,
-						z: 0,
-					},
-					angular: {
-						x: 0,
-						y: 0,
-						z: 0,
-					},
-				});
-				break;
-			case "a":
-				var twist = new ROSLIB.Message({
-					linear: {
-						x: 0,
-						y: 0,
-						z: 0,
-					},
-					angular: {
-						x: 0,
-						y: 0,
-						z: yam,
-					},
-				});
-				break;
-			case "d":
-				var twist = new ROSLIB.Message({
-					linear: {
-						x: 0,
-						y: 0,
-						z: 0,
-					},
-					angular: {
-						x: 0,
-						y: 0,
-						z: -yam,
-					},
-				});
-				break;
-			default:
-				break;
-		}
-		cmdVel.publish(twist);
+		console.log("移动状态");
 	}
 }
 
 // 循环显示状态
 function loopFunction() {
-	let colorStyle;
+	let ROScolor, ARMcolor;
 	if (constat === "未就绪") {
-		colorStyle = "color: blue;";
+		ROScolor = "color: blue;";
 	} else if (constat === "已连接") {
-		colorStyle = "color: green;";
+		ROScolor = "color: green;";
 	} else if (constat === "已断开") {
-		colorStyle = "color: red;";
+		ROScolor = "color: orange;";
+	} else if (constat === "连接错误") {
+		ROScolor = "color: red;";
 	} else {
-		colorStyle = "";
+		ROScolor = "";
+	}
+	if (wscs === "未就绪") {
+		ARMcolor = "color: blue;";
+	} else if (wscs === "已连接") {
+		ARMcolor = "color: green;";
+	} else if (wscs === "已断开") {
+		ARMcolor = "color: orange;";
+	} else if (wscs === "连接错误") {
+		ARMcolor = "color: red;";
+	} else {
+		ARMcolor = "";
 	}
 
 	// 更新 ROS 连接状态元素的内容和样式
 	const rosStatusElement = document.getElementById("rosStatus");
-	rosStatusElement.innerHTML = `ROS连接状态: <span style="${colorStyle}">${constat}</span>`;
+	const armStatusElement = document.getElementById("armStatus");
+	rosStatusElement.innerHTML = `ROS连接状态: <span style="${ROScolor}">${constat}</span>`;
+	armStatusElement.innerHTML = `ARM连接状态: <span style="${ARMcolor}">${wscs}</span>`;
 	messageBox.innerHTML = "速度: " + speed_mod + "</br>" + "层数: " + step;
 }
 
@@ -432,4 +474,6 @@ arrowLeft.addEventListener("click", handleButtonClick);
 arrowRight.addEventListener("click", handleButtonClick);
 
 // 添加键盘按键事件监听器
-document.addEventListener("keydown", handleKeyPress);
+document.addEventListener("keydown", handleKeyDown);
+document.addEventListener("keyup", handleKeyUp);
+document.addEventListener("keyclick", handleKeyClick);
