@@ -4,19 +4,21 @@ const path = require("path");
 
 // 创建窗口方法
 const createWindow = () => {
-	// const menu = Menu.buildFromTemplate([]);
-	// Menu.setApplicationMenu(menu);
+	const menu = Menu.buildFromTemplate([]);
+	Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
-		width: 500,
-		height: 850,
-		webPreferences: {
+		width: 1600,
+		height: 900,
+        webPreferences: {
+            webviewTag: true,
 			nodeIntegration: true,
 			contextIsolation: false, // 允许在渲染进程中使用 require 和其他 Electron API
 			preload: path.join(__dirname, "preload.js"), // 预加载脚本路径
         },
         icon: path.join(__dirname, 'assets/logo.ico'),
 	});
-	win.loadFile("index.html");
+    win.loadFile("index.html");
+    win.maximize();
 };
 
 // 设置应用图标

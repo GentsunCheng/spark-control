@@ -20,11 +20,15 @@
 		<link rel="stylesheet" href="css/font.min.css" />
 	</head>
 	<body>
+        <div class="container1">
 		<div class="container">
 			<div class="status-bar">
 				<span id="rosStatus"></span>
                 <span id="armStatus"></span>
 			</div>
+        </br>
+        </br>
+        </br>
         </br>
         </br>
         <span class="black-bold">[Q]断开连接 [R]默认位姿 [Alt]机械臂复位</span>
@@ -112,6 +116,13 @@
               </div>
 			<div class="message-box" id="messageBox"></div>
 		</div>
+        </div>
+        <div class="container2">
+            <iframe id="vnciframe" class="embedded-page" src="about:blank"></iframe>
+            <button class="btn btn-success" onclick="vncvalue()">
+                <span class="icon"></span>
+                <span class="button-text">connect</span>
+        </div>
 		<script src="js/eventemitter3.js"></script>
 		<script src="js/roslib.min.js"></script>
 		<script src="js/button.js"></script>

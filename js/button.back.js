@@ -13,10 +13,8 @@ const arrowUp = document.getElementById("arrowUp");
 const arrowDown = document.getElementById("arrowDown");
 const arrowLeft = document.getElementById("arrowLeft");
 const arrowRight = document.getElementById("arrowRight");
-
 const net = require("net");
 
-var vnciframe = document.getElementById("vnciframe");
 var messageBox = document.getElementById("messageBox");
 var ipaddr = "";
 var ros = null;
@@ -40,29 +38,18 @@ var keyState = {
 };
 var speed_mod = 1;
 var step = 1;
+var brakeActive = false;
 var constat = "未就绪";
 var wscs = "未就绪";
 // 每隔一定时间执行一次循环体代码
 var intervalId = setInterval(loopFunction, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
-function vncvalue() {
-	// 获取 iframe 元素
-	var iframe = document.querySelector(".embedded-page");
-	// 获取输入框的值
-	input = document.getElementById("inputField");
-	// 将输入的值赋给全局变量
-	ipaddr = input.value;
-	// 设置 src 属性值为输入的 IP 地址
-	iframe.src = "http://" + ipaddr + ":8080/guacamole";
-	// 打印远程桌面地址
-	console.log("VNC Addr：" + iframe.src);
-}
 function updateGlobalVariable() {
 	// 获取输入框的值
 	var input = document.getElementById("inputField");
 	// 将输入的值赋给全局变量
 	ipaddr = input.value;
-	// 打印ROS
+	// 打印全局变量的值
 	console.log("IP Addr：" + ipaddr);
 	// 初始化ROS
 	ros = new ROSLIB.Ros({
@@ -256,20 +243,20 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
 	var keyup = event.key;
 
-	if (keyup == "w") {
-		run = 0.0;
+    if (keyup == "w") {
+        run = 0.0;
 		keyState.w = false;
 	}
-	if (keyup == "s") {
-		run = 0.0;
+    if (keyup == "s") {
+        run = 0.0;
 		keyState.s = false;
 	}
-	if (keyup == "a") {
-		yam = 0.0;
+    if (keyup == "a") {
+        yam = 0.0;
 		keyState.a = false;
 	}
-	if (keyup == "d") {
-		yam = 0.0;
+    if (keyup == "d") {
+        yam = 0.0;
 		keyState.d = false;
 	}
 	if (keyup == " ") {
@@ -309,7 +296,10 @@ function handleKeyUp(event) {
 			socket.write("reset");
 			break;
 		case "q":
-			disconnect();
+			ros.close();
+			constat = "已断开";
+			wscs = "已断开";
+			socket.write("exit");
 			break;
 		default:
 			break;
@@ -420,7 +410,7 @@ function sendMessage(data) {
 		} else {
 			run_data = run * walk_vel;
 			yam_data = yam * yaw_rate;
-		}
+        }
 		var twist = new ROSLIB.Message({
 			linear: {
 				x: run_data,
@@ -436,15 +426,6 @@ function sendMessage(data) {
 		cmdVel.publish(twist);
 		console.log("移动状态");
 	}
-}
-
-// 断开连接函数
-function disconnect() {
-	ros.close();
-	constat = "已断开";
-	wscs = "已断开";
-	socket.write("exit");
-	iframe.src = "about:blank";
 }
 
 // 循环显示状态
@@ -503,9 +484,4 @@ arrowRight.addEventListener("click", handleButtonClick);
 // 添加键盘按键事件监听器
 document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
-
-// 给 iframe 元素添加事件监听器，当 iframe 加载完成后自动获取焦点
-vnciframe.addEventListener("load", function () {
-	// 设置 iframe 元素获取焦点
-	vnciframe.contentWindow.focus();
-});
+document.addEventListener("keyclick", handleKeyClick);

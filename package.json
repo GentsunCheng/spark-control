@@ -1,12 +1,12 @@
 {
     "name": "spark-control",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "nxrobo-control",
     "main": "index.js",
     "scripts": {
-        "test": "debug",
         "build": "electron-builder",
-        "start": "electron ."
+        "start": "electron .",
+        "push": "git push origin master"
     },
     "author": "GentsunCheng",
     "license": "GPL-3.0-or-later",
@@ -17,7 +17,7 @@
     },
     "build": {
         "appId": "xyz.orii.electron-spark",
-        "productName": "electron-spark",
+        "productName": "spark control",
         "directories": {
             "output": "dist"
         },
