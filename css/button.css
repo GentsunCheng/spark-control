@@ -9,7 +9,7 @@
 	justify-content: center;
 	background-color: #b3fcff;
 	font-weight: bold;
-    border-radius: 20px;
+	border-radius: 20px;
 }
 .center {
 	display: flex;
@@ -117,7 +117,7 @@
 .embedded-page {
 	width: 1024px;
 	height: 600px;
-    border-radius: 20px;
+	border-radius: 20px;
 }
 .container {
 	display: flex;
@@ -125,22 +125,22 @@
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
-    background-color: white;
-    border-radius: 20px;
+	background-color: white;
+	border-radius: 20px;
 }
 .container1 {
-    position: fixed;
-    top: 3%;
-    left: 1%;
-    background-color: white;
-    border-radius: 20px;
+	position: fixed;
+	top: 3%;
+	left: 1%;
+	background-color: white;
+	border-radius: 20px;
 }
 .container2 {
-    width: 1024px;
-    height: 600px;
-    position: fixed;
-    top: 15%;
-    right: 1%;
-    background-color: white;
-    border-radius: 20px;
-  }
+	width: 1024px;
+	height: 600px;
+	position: fixed;
+	top: 15%;
+	right: 1%;
+	background-color: white;
+	border-radius: 20px;
+}

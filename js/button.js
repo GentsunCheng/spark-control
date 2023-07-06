@@ -30,7 +30,6 @@ var yaw_rate_run = 1.0;
 var yam = 0.0;
 var run = 0.0;
 var angle1st = 90.0;
-var angle3rd = 90.0;
 var keyState = {
 	w: false,
 	s: false,
@@ -43,7 +42,7 @@ var step = 1;
 var constat = "未就绪";
 var wscs = "未就绪";
 // 每隔一定时间执行一次循环体代码
-var intervalId = setInterval(loopFunction, 100); // 间隔时间为 100 毫秒
+var intervalId = setInterval(loopShow, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
 function vncvalue() {
 	// 获取 iframe 元素
@@ -181,10 +180,12 @@ function handleButtonClick(event) {
 			sendMessage(10 + step);
 			break;
 		case "arrowLeft":
-			sendMessage(41);
+			if (angle1st < 180) angle1st++;
+			socket.write("angle1st+" + angle1st);
 			break;
 		case "arrowRight":
-			sendMessage(43);
+			if (angle1st > 0) angle1st--;
+			socket.write("angle1st+" + angle1st);
 			break;
 		default:
 			break;
@@ -225,28 +226,20 @@ function handleKeyDown(event) {
 			}
 			sendMessage(10 + step);
 			break;
-		// 第四关节调整
 		case "ArrowLeft":
-			sendMessage(41);
-			break;
-		case "ArrowRight":
-			sendMessage(43);
-			break;
-		case "8":
-			if (angle3rd > 0) angle3rd--;
-			socket.write("angle3rd+" + angle3rd);
-			break;
-		case "5":
-			if (angle3rd < 180) angle3rd++;
-			socket.write("angle3rd+" + angle3rd);
-			break;
-		case "4":
 			if (angle1st < 180) angle1st++;
 			socket.write("angle1st+" + angle1st);
 			break;
-		case "6":
+		case "ArrowRight":
 			if (angle1st > 0) angle1st--;
 			socket.write("angle1st+" + angle1st);
+			break;
+		// 第四关节调整
+		case "7":
+			sendMessage(41);
+			break;
+		case "9":
+			sendMessage(43);
 			break;
 		default:
 			break;
@@ -411,6 +404,7 @@ function sendMessage(data) {
 		const message = new ROSLIB.Message({
 			data: "403",
 		});
+		angle1st = 90.0;
 		publisher.publish(message);
 		console.log("默认位姿");
 	} else if (data == "run") {
@@ -448,7 +442,7 @@ function disconnect() {
 }
 
 // 循环显示状态
-function loopFunction() {
+function loopShow() {
 	let ROScolor, ARMcolor;
 	if (constat === "未就绪") {
 		ROScolor = "color: blue;";
@@ -482,30 +476,38 @@ function loopFunction() {
 }
 
 // 调用 loopFunction() 更新状态
-loopFunction();
+loopShow();
 
 // 添加事件监听
-upButton.addEventListener("click", handleButtonClick);
-downButton.addEventListener("click", handleButtonClick);
-leftButton.addEventListener("click", handleButtonClick);
-rightButton.addEventListener("click", handleButtonClick);
-grabButton.addEventListener("click", handleButtonClick);
-releaseButton.addEventListener("click", handleButtonClick);
-brakeButton.addEventListener("click", handleButtonClick);
+// 点击事件
 speedButton.addEventListener("click", handleButtonClick);
 defaultButton.addEventListener("click", handleButtonClick);
 resetButton.addEventListener("click", handleButtonClick);
-arrowUp.addEventListener("click", handleButtonClick);
-arrowDown.addEventListener("click", handleButtonClick);
-arrowLeft.addEventListener("click", handleButtonClick);
-arrowRight.addEventListener("click", handleButtonClick);
+grabButton.addEventListener("click", handleButtonClick);
+releaseButton.addEventListener("click", handleButtonClick);
+
+// mousedown事件
+upButton.addEventListener("mousedown", handleButtonClick);
+downButton.addEventListener("mousedown", handleButtonClick);
+leftButton.addEventListener("mousedown", handleButtonClick);
+rightButton.addEventListener("mousedown", handleButtonClick);
+brakeButton.addEventListener("mousedown", handleButtonClick);
+arrowUp.addEventListener("mousedown", handleButtonClick);
+arrowDown.addEventListener("mousedown", handleButtonClick);
+arrowLeft.addEventListener("mousedown", handleButtonClick);
+arrowRight.addEventListener("mousedown", handleButtonClick);
 
 // 添加键盘按键事件监听器
 document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
 
-// 给 iframe 元素添加事件监听器，当 iframe 加载完成后自动获取焦点
-vnciframe.addEventListener("load", function () {
+// 监听鼠标移入事件
+vnciframe.addEventListener("mouseenter", function () {
 	// 设置 iframe 元素获取焦点
 	vnciframe.contentWindow.focus();
+});
+// 监听鼠标移出事件
+vnciframe.addEventListener("mouseleave", function () {
+	// 设置 iframe 元素失去焦点
+	vnciframe.contentWindow.blur();
 });
