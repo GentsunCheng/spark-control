@@ -164,7 +164,8 @@ function handleButtonClick(event) {
 			step = 2;
 			sendMessage(403);
 			break;
-		case "resetButton":
+        case "resetButton":
+            angle1st = 90.0;
 			socket.write("reset");
 			break;
 		case "arrowUp":
@@ -303,7 +304,8 @@ function handleKeyUp(event) {
             angle1st = 90.0;
 			sendMessage(403);
 			break;
-		case "Alt":
+        case "Alt":
+            angle1st = 90.0;
 			socket.write("reset");
 			break;
 		case "q":
