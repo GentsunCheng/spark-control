@@ -1,6 +1,6 @@
 {
     "name": "spark-control",
-    "version": "2.0.0",
+    "version": "2.3.0",
     "description": "nxrobo-control",
     "main": "index.js",
     "scripts": {
@@ -13,6 +13,7 @@
     "devDependencies": {
         "electron": "^25.2.0",
         "electron-builder": "^24.4.0",
+        "electron-packager": "^17.1.1",
         "ssh2": "^1.14.0"
     },
     "build": {
@@ -23,7 +24,7 @@
         },
         "win": {
             "icon": "assets/logo.ico"
-          }
+        }
     },
     "dependencies": {
         "electron-cookies": "^1.1.0",

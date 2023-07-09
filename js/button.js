@@ -24,9 +24,9 @@ var socket = new net.Socket();
 var publisher = null;
 var cmdVel = null;
 var walk_vel = 0.2;
-var run_vel = 1.3;
+var run_vel = 2.0;
 var yaw_rate = 0.2;
-var yaw_rate_run = 1.0;
+var yaw_rate_run = 1.3;
 var yam = 0.0;
 var run = 0.0;
 var angle1st = 90.0;
@@ -159,7 +159,9 @@ function handleButtonClick(event) {
 				speed_mod = 1;
 			}
 			break;
-		case "defaultButton":
+        case "defaultButton":
+            angle1st = 90.0;
+			step = 2;
 			sendMessage(403);
 			break;
 		case "resetButton":
@@ -180,11 +182,11 @@ function handleButtonClick(event) {
 			sendMessage(10 + step);
 			break;
 		case "arrowLeft":
-			if (angle1st < 180) angle1st++;
+			if (angle1st < 130) angle1st++;
 			socket.write("angle1st+" + angle1st);
 			break;
 		case "arrowRight":
-			if (angle1st > 0) angle1st--;
+			if (angle1st > 50) angle1st--;
 			socket.write("angle1st+" + angle1st);
 			break;
 		default:
@@ -227,11 +229,11 @@ function handleKeyDown(event) {
 			sendMessage(10 + step);
 			break;
 		case "ArrowLeft":
-			if (angle1st < 180) angle1st++;
+			if (angle1st < 130) angle1st++;
 			socket.write("angle1st+" + angle1st);
 			break;
 		case "ArrowRight":
-			if (angle1st > 0) angle1st--;
+			if (angle1st > 50) angle1st--;
 			socket.write("angle1st+" + angle1st);
 			break;
 		// 第四关节调整
@@ -292,10 +294,13 @@ function handleKeyUp(event) {
 			break;
 		//备用状态
 		case "Enter":
+			step = 2;
 			sendMessage(200);
 			break;
 		//其他状态
 		case "r":
+            step = 2;
+            angle1st = 90.0;
 			sendMessage(403);
 			break;
 		case "Alt":
