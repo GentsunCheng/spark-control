@@ -145,7 +145,7 @@ function handleButtonClick(event) {
 			break;
 		case "grabButton":
 			// 执行抓取的操作
-			sendMessage("g");
+			sendMessage("ga");
 			break;
 		case "releaseButton":
 			// 执行放置的操作
@@ -364,7 +364,13 @@ function sendMessage(data) {
 			data: "0",
 		});
 		publisher.publish(message);
-		console.log("抓取");
+		console.log("键盘抓取");
+	} else if (data == "ga") {
+		const message = new ROSLIB.Message({
+			data: "0a",
+		});
+		publisher.publish(message);
+		console.log("按键抓取");
 	} else if (data == "0") {
 		const message = new ROSLIB.Message({
 			data: "1",
