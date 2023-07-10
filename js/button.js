@@ -367,7 +367,7 @@ function sendMessage(data) {
 		console.log("抓取");
 	} else if (data == "0") {
 		const message = new ROSLIB.Message({
-			data: "10",
+			data: "1",
 		});
 		publisher.publish(message);
 		console.log("放置");
