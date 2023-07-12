@@ -158,14 +158,14 @@ function handleButton(event) {
 				if (step < 3) {
 					step++;
 				}
-				sendMessage(10 + step);
+				sendMessage(50 + step);
 				break;
 			case "arrowDown":
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
 				}
-				sendMessage(10 + step);
+				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
 				if (angle1st < 130) angle1st++;
@@ -432,9 +432,9 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("层数调整");
-	} else if (data == 13) {
+	} else if (data == 53) {
 		const message = new ROSLIB.Message({
-			data: "13",
+			data: "53",
 		});
 		publisher.publish(message);
 		console.log("层数调整");
