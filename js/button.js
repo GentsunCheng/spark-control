@@ -4,10 +4,7 @@ const downButton = document.getElementById("downButton");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
 const grabButton = document.getElementById("grabButton");
-const releaseButton = document.getElementById("releaseButton");
-const brakeButton = document.getElementById("brakeButton");
 const speedButton = document.getElementById("speedButton");
-const defaultButton = document.getElementById("defaultButton");
 const resetButton = document.getElementById("resetButton");
 const arrowUp = document.getElementById("arrowUp");
 const arrowDown = document.getElementById("arrowDown");
@@ -112,86 +109,143 @@ function updateGlobalVariable() {
 }
 
 // 按钮点击事件处理函数
-function handleButtonClick(event) {
+function handleButton(event) {
 	buttonId = event.target.id;
 
-	// 根据按钮的id执行相应操作
-	switch (buttonId) {
-		case "upButton":
-			// 执行向上的操作
-			run = 1.0;
-			sendMessage("run");
-			break;
-		case "downButton":
-			// 执行向下的操作
-			run = -1.0;
-			sendMessage("run");
-			break;
-		case "leftButton":
-			// 执行向左的操作
-			yam = 1.0;
-			sendMessage("run");
-			break;
-		case "rightButton":
-			// 执行向右的操作
-			yam = -1.0;
-			sendMessage("run");
-			break;
-		case "brakeButton":
-			// 执行刹车的操作
-			run = 0.0;
-			yam = 0.0;
-			sendMessage("run");
-			break;
-		case "grabButton":
-			// 执行抓取的操作
-			sendMessage("ga");
-			break;
-		case "releaseButton":
-			// 执行放置的操作
-			sendMessage("0");
-			break;
-		case "speedButton":
-			// 执行速度切换的操作
-			if (speed_mod == 1) {
-				speed_mod = 0;
-			} else {
-				speed_mod = 1;
-			}
-			break;
-        case "defaultButton":
-            angle1st = 90.0;
-			step = 2;
-			sendMessage(403);
-			break;
-        case "resetButton":
-            angle1st = 90.0;
-			socket.write("reset");
-			break;
-		case "arrowUp":
-			// 执行向上的操作
-			if (step < 3) {
-				step++;
-			}
-			sendMessage(10 + step);
-			break;
-		case "arrowDown":
-			// 执行向下的操作
-			if (step > 1) {
-				step--;
-			}
-			sendMessage(10 + step);
-			break;
-		case "arrowLeft":
-			if (angle1st < 130) angle1st++;
-			socket.write("angle1st+" + angle1st);
-			break;
-		case "arrowRight":
-			if (angle1st > 50) angle1st--;
-			socket.write("angle1st+" + angle1st);
-			break;
-		default:
-			break;
+	// 检测鼠标左键点击
+	if (event.button === 0) {
+		// 根据按钮的id执行相应操作
+		switch (buttonId) {
+			case "upButton":
+				// 执行向上的操作
+				run = 1.0;
+				sendMessage("run");
+				break;
+			case "downButton":
+				// 执行向下的操作
+				run = -1.0;
+				sendMessage("run");
+				break;
+			case "leftButton":
+				// 执行向左的操作
+				yam = 1.0;
+				sendMessage("run");
+				break;
+			case "rightButton":
+				// 执行向右的操作
+				yam = -1.0;
+				sendMessage("run");
+				break;
+			case "grabButton":
+				// 执行抓取的操作
+				sendMessage("ga");
+				break;
+			case "speedButton":
+				// 执行速度切换的操作
+				if (speed_mod == 1) {
+					speed_mod = 0;
+				} else {
+					speed_mod = 1;
+				}
+				break;
+			case "resetButton":
+				angle1st = 90.0;
+				step = 2;
+				sendMessage(403);
+				break;
+			case "arrowUp":
+				// 执行向上的操作
+				if (step < 3) {
+					step++;
+				}
+				sendMessage(10 + step);
+				break;
+			case "arrowDown":
+				// 执行向下的操作
+				if (step > 1) {
+					step--;
+				}
+				sendMessage(10 + step);
+				break;
+			case "arrowLeft":
+				if (angle1st < 130) angle1st++;
+				socket.write("angle1st+" + angle1st);
+				break;
+			case "arrowRight":
+				if (angle1st > 50) angle1st--;
+				socket.write("angle1st+" + angle1st);
+				break;
+			default:
+				break;
+		}
+	}
+	// 检测鼠标右键点击
+	if (event.button === 2) {
+		// 根据按钮的id执行相应操作
+		switch (buttonId) {
+			case "upButton":
+				// 执行向上的操作
+				run = 0.0;
+				yam = 0.0;
+				sendMessage("run");
+				break;
+			case "downButton":
+				// 执行向下的操作
+				run = 0.0;
+				yam = 0.0;
+				sendMessage("run");
+				break;
+			case "leftButton":
+				// 执行向左的操作
+				run = 0.0;
+				yam = 0.0;
+				sendMessage("run");
+				break;
+			case "rightButton":
+				// 执行向右的操作
+				run = 0.0;
+				yam = 0.0;
+				sendMessage("run");
+				break;
+			case "grabButton":
+				// 执行放下的操作
+				sendMessage("0");
+				break;
+			case "speedButton":
+				// 执行速度切换的操作
+				if (speed_mod == 1) {
+					speed_mod = 0;
+				} else {
+					speed_mod = 1;
+				}
+				break;
+			case "resetButton":
+				angle1st = 90.0;
+				socket.write("reset");
+				break;
+			case "arrowUp":
+				// 执行向上的操作
+				if (step < 3) {
+					step++;
+				}
+				sendMessage(10 + step);
+				break;
+			case "arrowDown":
+				// 执行向下的操作
+				if (step > 1) {
+					step--;
+				}
+				sendMessage(10 + step);
+				break;
+			case "arrowLeft":
+				sendMessage(41);
+				break;
+			case "arrowRight":
+				sendMessage(43);
+				break;
+			default:
+				break;
+		}
 	}
 }
 
@@ -276,12 +330,10 @@ function handleKeyUp(event) {
 	switch (keyup) {
 		case "g":
 			// 执行抓取的操作
-			simulateButtonClick(grabButton);
 			sendMessage("g");
 			break;
 		case "0":
 			// 执行放置的操作
-			simulateButtonClick(releaseButton);
 			sendMessage("0");
 			break;
 		case "Shift":
@@ -300,12 +352,12 @@ function handleKeyUp(event) {
 			break;
 		//其他状态
 		case "r":
-            step = 2;
-            angle1st = 90.0;
+			step = 2;
+			angle1st = 90.0;
 			sendMessage(403);
 			break;
-        case "Alt":
-            angle1st = 90.0;
+		case "Alt":
+			angle1st = 90.0;
 			socket.write("reset");
 			break;
 		case "q":
@@ -346,15 +398,6 @@ function checkMultipleKeys() {
 		yam = 0.0;
 	}
 	sendMessage("run");
-}
-
-// 模拟按钮点击效果
-function simulateButtonClick(button) {
-	const icon = button.querySelector(".icon");
-	icon.classList.add("pressed");
-	setTimeout(() => {
-		icon.classList.remove("pressed");
-	}, 100);
 }
 
 // 发送消息到 ROS WebSocket
@@ -492,23 +535,18 @@ function loopShow() {
 loopShow();
 
 // 添加事件监听
-// 点击事件
-speedButton.addEventListener("click", handleButtonClick);
-defaultButton.addEventListener("click", handleButtonClick);
-resetButton.addEventListener("click", handleButtonClick);
-grabButton.addEventListener("click", handleButtonClick);
-releaseButton.addEventListener("click", handleButtonClick);
-
 // mousedown事件
-upButton.addEventListener("mousedown", handleButtonClick);
-downButton.addEventListener("mousedown", handleButtonClick);
-leftButton.addEventListener("mousedown", handleButtonClick);
-rightButton.addEventListener("mousedown", handleButtonClick);
-brakeButton.addEventListener("mousedown", handleButtonClick);
-arrowUp.addEventListener("mousedown", handleButtonClick);
-arrowDown.addEventListener("mousedown", handleButtonClick);
-arrowLeft.addEventListener("mousedown", handleButtonClick);
-arrowRight.addEventListener("mousedown", handleButtonClick);
+upButton.addEventListener("mousedown", handleButton);
+downButton.addEventListener("mousedown", handleButton);
+leftButton.addEventListener("mousedown", handleButton);
+rightButton.addEventListener("mousedown", handleButton);
+arrowUp.addEventListener("mousedown", handleButton);
+arrowDown.addEventListener("mousedown", handleButton);
+arrowLeft.addEventListener("mousedown", handleButton);
+arrowRight.addEventListener("mousedown", handleButton);
+grabButton.addEventListener("mousedown", handleButton);
+resetButton.addEventListener("mousedown", handleButton);
+speedButton.addEventListener("mousedown", handleButton);
 
 // 添加键盘按键事件监听器
 document.addEventListener("keydown", handleKeyDown);

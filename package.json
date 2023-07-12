@@ -6,7 +6,7 @@
     "scripts": {
         "build": "electron-builder",
         "start": "electron .",
-        "push": "git push origin master"
+        "clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
     },
     "author": "GentsunCheng",
     "license": "GPL-3.0-or-later",
