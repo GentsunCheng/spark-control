@@ -228,14 +228,14 @@ function handleButton(event) {
 				if (step < 3) {
 					step++;
 				}
-				sendMessage(10 + step);
+				sendMessage(50 + step);
 				break;
 			case "arrowDown":
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
 				}
-				sendMessage(10 + step);
+				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
 				sendMessage(41);
@@ -275,13 +275,13 @@ function handleKeyDown(event) {
 			if (step < 3) {
 				step++;
 			}
-			sendMessage(10 + step);
+			sendMessage(50 + step);
 			break;
 		case "ArrowDown":
 			if (step > 1) {
 				step--;
 			}
-			sendMessage(10 + step);
+			sendMessage(50 + step);
 			break;
 		case "ArrowLeft":
 			if (angle1st < 130) angle1st++;
@@ -420,15 +420,15 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("放置");
-	} else if (data == 11) {
+	} else if (data == 51) {
 		const message = new ROSLIB.Message({
-			data: "11",
+			data: "51",
 		});
 		publisher.publish(message);
 		console.log("层数调整");
-	} else if (data == 12) {
+	} else if (data == 52) {
 		const message = new ROSLIB.Message({
-			data: "12",
+			data: "52",
 		});
 		publisher.publish(message);
 		console.log("层数调整");
