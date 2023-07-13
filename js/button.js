@@ -136,9 +136,9 @@ function handleButton(event) {
 				yam = -1.0;
 				sendMessage("run");
 				break;
-            case "grabButton":
-                step = 0;
-                angle1st = 90.0;
+			case "grabButton":
+				step = 0;
+				angle1st = 90.0;
 				// 执行抓取的操作
 				sendMessage("ga");
 				break;
@@ -150,8 +150,8 @@ function handleButton(event) {
 					speed_mod = 1;
 				}
 				break;
-            case "resetButton":
-                step = 0;
+			case "resetButton":
+				step = 0;
 				angle1st = 90.0;
 				sendMessage(403);
 				break;
@@ -166,10 +166,9 @@ function handleButton(event) {
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
-                }
-                else if (step <= 0) {
-                    step = 1;
-                }
+				} else if (step <= 0) {
+					step = 1;
+				}
 				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
@@ -224,8 +223,8 @@ function handleButton(event) {
 					speed_mod = 1;
 				}
 				break;
-            case "resetButton":
-                step = 0;
+			case "resetButton":
+				step = 0;
 				angle1st = 90.0;
 				socket.write("reset");
 				break;
@@ -240,10 +239,9 @@ function handleButton(event) {
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
-                }
-                else if (step <= 0) {
-                    step = 1;
-                }
+				} else if (step <= 0) {
+					step = 1;
+				}
 				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
@@ -289,10 +287,9 @@ function handleKeyDown(event) {
 		case "ArrowDown":
 			if (step > 1) {
 				step--;
-            }
-            else if (step <= 0) {
-                step = 1;
-            }
+			} else if (step <= 0) {
+				step = 1;
+			}
 			sendMessage(50 + step);
 			break;
 		case "ArrowLeft":
@@ -340,8 +337,12 @@ function handleKeyUp(event) {
 	checkMultipleKeys();
 
 	switch (keyup) {
-        case "g":
-            step = 0;
+		case ".":
+			step = 0;
+			sendMessage("666");
+			break;
+		case "g":
+			step = 0;
 			// 执行抓取的操作
 			sendMessage("g");
 			break;
@@ -368,8 +369,8 @@ function handleKeyUp(event) {
 			angle1st = 90.0;
 			sendMessage(403);
 			break;
-        case "Alt":
-            step = 0;
+		case "Alt":
+			step = 0;
 			angle1st = 90.0;
 			socket.write("reset");
 			break;
@@ -421,6 +422,12 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("键盘抓取");
+	} else if (data == "666") {
+		const message = new ROSLIB.Message({
+			data: "666",
+		});
+		publisher.publish(message);
+		console.log("666");
 	} else if (data == "ga") {
 		const message = new ROSLIB.Message({
 			data: "0a",
@@ -503,17 +510,17 @@ function sendMessage(data) {
 
 // 断开连接函数
 function disconnect() {
-    constat = "已断开";
-    wscs = "已断开";
-    socket.write("exit");
+	constat = "已断开";
+	wscs = "已断开";
+	socket.write("exit");
 	ros.close();
-    socket.close();
+	socket.close();
 	iframe.src = "about:blank";
 }
 
 // 循环显示状态
 function loopEvent() {
-    let ROScolor, ARMcolor;
+	let ROScolor, ARMcolor;
 	if (constat === "未就绪") {
 		ROScolor = "color: blue;";
 	} else if (constat === "已连接") {
@@ -542,7 +549,13 @@ function loopEvent() {
 	const armStatusElement = document.getElementById("armStatus");
 	rosStatusElement.innerHTML = `ROS状态:<span style="${ROScolor}">${constat}</span>`;
 	armStatusElement.innerHTML = `ARM状态:<span style="${ARMcolor}">${wscs}</span>`;
-	messageBox.innerHTML = "<span style='font-weight: bold;'>速度: " + speed_mod + "</br>" + "层数: " + step + "</span>";
+	messageBox.innerHTML =
+		"<span style='font-weight: bold;'>速度: " +
+		speed_mod +
+		"</br>" +
+		"层数: " +
+		step +
+		"</span>";
 }
 
 // 调用 loopFunction() 更新状态
