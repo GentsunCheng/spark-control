@@ -136,7 +136,9 @@ function handleButton(event) {
 				yam = -1.0;
 				sendMessage("run");
 				break;
-			case "grabButton":
+            case "grabButton":
+                step = 0;
+                angle1st = 90.0;
 				// 执行抓取的操作
 				sendMessage("ga");
 				break;
@@ -148,9 +150,9 @@ function handleButton(event) {
 					speed_mod = 1;
 				}
 				break;
-			case "resetButton":
+            case "resetButton":
+                step = 0;
 				angle1st = 90.0;
-				step = 2;
 				sendMessage(403);
 				break;
 			case "arrowUp":
@@ -164,7 +166,10 @@ function handleButton(event) {
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
-				}
+                }
+                else if (step <= 0) {
+                    step = 1;
+                }
 				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
@@ -219,7 +224,8 @@ function handleButton(event) {
 					speed_mod = 1;
 				}
 				break;
-			case "resetButton":
+            case "resetButton":
+                step = 0;
 				angle1st = 90.0;
 				socket.write("reset");
 				break;
@@ -234,7 +240,10 @@ function handleButton(event) {
 				// 执行向下的操作
 				if (step > 1) {
 					step--;
-				}
+                }
+                else if (step <= 0) {
+                    step = 1;
+                }
 				sendMessage(50 + step);
 				break;
 			case "arrowLeft":
@@ -280,7 +289,10 @@ function handleKeyDown(event) {
 		case "ArrowDown":
 			if (step > 1) {
 				step--;
-			}
+            }
+            else if (step <= 0) {
+                step = 1;
+            }
 			sendMessage(50 + step);
 			break;
 		case "ArrowLeft":
@@ -328,7 +340,8 @@ function handleKeyUp(event) {
 	checkMultipleKeys();
 
 	switch (keyup) {
-		case "g":
+        case "g":
+            step = 0;
 			// 执行抓取的操作
 			sendMessage("g");
 			break;
@@ -347,16 +360,16 @@ function handleKeyUp(event) {
 			break;
 		//备用状态
 		case "Enter":
-			step = 2;
 			sendMessage(200);
 			break;
 		//其他状态
 		case "r":
-			step = 2;
+			step = 0;
 			angle1st = 90.0;
 			sendMessage(403);
 			break;
-		case "Alt":
+        case "Alt":
+            step = 0;
 			angle1st = 90.0;
 			socket.write("reset");
 			break;
@@ -526,8 +539,8 @@ function loopShow() {
 	// 更新 ROS 连接状态元素的内容和样式
 	const rosStatusElement = document.getElementById("rosStatus");
 	const armStatusElement = document.getElementById("armStatus");
-	rosStatusElement.innerHTML = `ROS连接状态: <span style="${ROScolor}">${constat}</span>`;
-	armStatusElement.innerHTML = `ARM连接状态: <span style="${ARMcolor}">${wscs}</span>`;
+	rosStatusElement.innerHTML = `ROS状态:<span style="${ROScolor}">${constat}</span>`;
+	armStatusElement.innerHTML = `ARM状态:<span style="${ARMcolor}">${wscs}</span>`;
 	messageBox.innerHTML = "速度: " + speed_mod + "</br>" + "层数: " + step;
 }
 
