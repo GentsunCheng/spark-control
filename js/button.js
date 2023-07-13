@@ -39,7 +39,7 @@ var step = 1;
 var constat = "未就绪";
 var wscs = "未就绪";
 // 每隔一定时间执行一次循环体代码
-var intervalId = setInterval(loopShow, 100); // 间隔时间为 100 毫秒
+var intervalId = setInterval(loopEvent, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
 function vncvalue() {
 	// 获取 iframe 元素
@@ -503,16 +503,17 @@ function sendMessage(data) {
 
 // 断开连接函数
 function disconnect() {
+    constat = "已断开";
+    wscs = "已断开";
+    socket.write("exit");
 	ros.close();
-	constat = "已断开";
-	wscs = "已断开";
-	socket.write("exit");
+    socket.close();
 	iframe.src = "about:blank";
 }
 
 // 循环显示状态
-function loopShow() {
-	let ROScolor, ARMcolor;
+function loopEvent() {
+    let ROScolor, ARMcolor;
 	if (constat === "未就绪") {
 		ROScolor = "color: blue;";
 	} else if (constat === "已连接") {
@@ -541,11 +542,11 @@ function loopShow() {
 	const armStatusElement = document.getElementById("armStatus");
 	rosStatusElement.innerHTML = `ROS状态:<span style="${ROScolor}">${constat}</span>`;
 	armStatusElement.innerHTML = `ARM状态:<span style="${ARMcolor}">${wscs}</span>`;
-	messageBox.innerHTML = "速度: " + speed_mod + "</br>" + "层数: " + step;
+	messageBox.innerHTML = "<span style='font-weight: bold;'>速度: " + speed_mod + "</br>" + "层数: " + step + "</span>";
 }
 
 // 调用 loopFunction() 更新状态
-loopShow();
+loopEvent();
 
 // 添加事件监听
 // mousedown事件
