@@ -1,34 +1,34 @@
 {
-    "name": "spark-control",
-    "version": "3.2.2",
-    "description": "nxrobo-control",
-    "main": "index.js",
-    "scripts": {
-        "build": "electron-builder",
-        "start": "electron .",
-        "clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
-    },
-    "author": "GentsunCheng",
-    "license": "GPL-3.0-or-later",
-    "devDependencies": {
-        "electron": "^25.2.0",
-        "electron-builder": "^24.4.0",
-        "electron-packager": "^17.1.1",
-        "ssh2": "^1.14.0"
-    },
-    "build": {
-        "appId": "xyz.orii.electron-spark",
-        "productName": "spark control",
-        "directories": {
-            "output": "dist"
-        },
-        "win": {
-            "icon": "assets/logo.ico"
-        }
-    },
-    "dependencies": {
-        "electron-cookies": "^1.1.0",
-        "electron-localshortcut": "^3.2.1",
-        "electron-prompt": "^1.7.0"
-    }
+	"name": "spark-control",
+	"version": "3.2.2",
+	"description": "nxrobo-control",
+	"main": "index.js",
+	"scripts": {
+		"build": "electron-builder",
+		"start": "electron .",
+		"clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
+	},
+	"author": "GentsunCheng",
+	"license": "GPL-3.0-or-later",
+	"devDependencies": {
+		"electron": "^25.2.0",
+		"electron-builder": "^24.4.0",
+		"electron-packager": "^17.1.1",
+		"ssh2": "^1.14.0"
+	},
+	"build": {
+		"appId": "xyz.orii.electron-spark",
+		"productName": "spark control",
+		"directories": {
+			"output": "dist"
+		},
+		"win": {
+			"icon": "assets/logo.ico"
+		}
+	},
+	"dependencies": {
+		"electron-cookies": "^1.1.0",
+		"electron-localshortcut": "^3.2.1",
+		"electron-prompt": "^1.7.0"
+	}
 }

@@ -111,11 +111,12 @@
 	background-color: red;
 }
 .btn-transparent {
-    background-color: transparent;
+	background-color: transparent;
 }
 
 .btn:active {
 	transform: scale(0.98);
+	transition-duration: 0.1s;
 }
 .embedded-page {
 	width: 1024px;

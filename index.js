@@ -9,20 +9,24 @@ const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 1600,
 		height: 900,
-        webPreferences: {
-            webviewTag: true,
+		webPreferences: {
+			webviewTag: true,
 			nodeIntegration: true,
 			contextIsolation: false, // 允许在渲染进程中使用 require 和其他 Electron API
 			preload: path.join(__dirname, "preload.js"), // 预加载脚本路径
-        },
-        icon: path.join(__dirname, 'assets/logo.ico'),
+		},
+		icon: path.join(__dirname, "assets/logo.ico"),
 	});
-    win.loadFile("index.html");
-    win.maximize();
+	win.loadFile("index.html");
+	win.maximize();
+	// 在你的窗口加载后启用亚克力效果
+	win.addEventListener("load", () => {
+		win.setAcrylicEnabled(true);
+	});
 };
 
 // 设置应用图标
-const iconPath = path.join(__dirname, 'assets/logo.ico');
+const iconPath = path.join(__dirname, "assets/logo.ico");
 app.whenReady().then(() => {
 	if (app.isReady() && app.dock) {
 		app.dock.setIcon(iconPath);
@@ -32,12 +36,4 @@ app.whenReady().then(() => {
 // 在 app 就绪后创建窗口
 app.whenReady().then(() => {
 	createWindow();
-});
-
-// 监听来自渲染进程的 SSH 命令执行请求
-ipcMain.on("execute-ssh-command", (event, addr, command) => {
-	exec(`ssh spark@"${addr}" "${command}"`, (error, stdout, stderr) => {
-		console.log(`SSH status: ${stdout}`);
-		event.reply("ssh-command-executed", { stdout });
-	});
 });
