@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 const { exec } = require("child_process");
 const path = require("path");
 
@@ -8,7 +8,8 @@ const createWindow = () => {
 	Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
 		width: 1600,
-		height: 900,
+        height: 900,
+        blur: true,
 		webPreferences: {
 			webviewTag: true,
 			nodeIntegration: true,
@@ -18,11 +19,9 @@ const createWindow = () => {
 		icon: path.join(__dirname, "assets/logo.ico"),
 	});
 	win.loadFile("index.html");
-	win.maximize();
-	// 在你的窗口加载后启用亚克力效果
-	win.addEventListener("load", () => {
-		win.setAcrylicEnabled(true);
-	});
+    win.maximize();
+    win.setOpacity(0.8);
+    win.show();
 };
 
 // 设置应用图标

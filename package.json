@@ -1,6 +1,6 @@
 {
 	"name": "spark-control",
-	"version": "3.2.2",
+	"version": "3.5.0",
 	"description": "nxrobo-control",
 	"main": "index.js",
 	"scripts": {
@@ -27,8 +27,10 @@
 		}
 	},
 	"dependencies": {
+		"electron-acrylic-window": "^0.5.11",
 		"electron-cookies": "^1.1.0",
 		"electron-localshortcut": "^3.2.1",
-		"electron-prompt": "^1.7.0"
+		"electron-prompt": "^1.7.0",
+		"react-blur": "^1.1.1"
 	}
 }
