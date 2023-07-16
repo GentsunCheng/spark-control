@@ -7,8 +7,8 @@ const createWindow = () => {
 	const menu = Menu.buildFromTemplate([]);
 	Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
-		width: 1600,
-        height: 900,
+		width: 1400,
+        height: 800,
         blur: true,
 		webPreferences: {
 			webviewTag: true,
@@ -19,8 +19,7 @@ const createWindow = () => {
 		icon: path.join(__dirname, "assets/logo.ico"),
 	});
 	win.loadFile("index.html");
-    win.maximize();
-    win.setOpacity(0.8);
+    win.setOpacity(0.9);
     win.show();
 };
 
