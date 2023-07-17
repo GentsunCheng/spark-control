@@ -19,7 +19,7 @@ const createWindow = () => {
 		icon: path.join(__dirname, "assets/logo.ico"),
 	});
 	win.loadFile("index.html");
-    win.setOpacity(0.9);
+    win.setOpacity(0.95);
     win.show();
 };
 
