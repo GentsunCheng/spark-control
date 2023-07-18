@@ -1,5 +1,4 @@
 const { app, BrowserWindow, Menu } = require("electron");
-const { exec } = require("child_process");
 const path = require("path");
 
 // 创建窗口方法
