@@ -342,7 +342,7 @@ function handleKeyUp(event) {
 			sendMessage("666");
 			break;
 		case "g":
-			step = 0;
+			step = 2;
 			// 执行抓取的操作
 			sendMessage("g");
 			break;
