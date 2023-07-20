@@ -504,7 +504,7 @@ function sendMessage(data) {
 			},
 		});
 		cmdVel.publish(twist);
-		console.log("移动状态");
+		console.log(run_data + " " + yam_data);
 	}
 }
 
