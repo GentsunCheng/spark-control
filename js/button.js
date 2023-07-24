@@ -315,19 +315,25 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
 	var keyup = event.key;
 
-	if (keyup == "w") {
+    if (keyup == "w") {
+        run = 0.0;
 		keyState.w = false;
 	}
-	if (keyup == "s") {
+    if (keyup == "s") {
+        run = 0.0;
 		keyState.s = false;
 	}
-	if (keyup == "a") {
+    if (keyup == "a") {
+        yam = 0.0;
 		keyState.a = false;
 	}
-	if (keyup == "d") {
+    if (keyup == "d") {
+        yam = 0.0;
 		keyState.d = false;
 	}
-	if (keyup == " ") {
+    if (keyup == " ") {
+        run = 0.0;
+        yam = 0.0;
 		keyState.space = false;
 	}
 	checkMultipleKeys();
