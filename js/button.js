@@ -316,19 +316,15 @@ function handleKeyUp(event) {
 	var keyup = event.key;
 
 	if (keyup == "w") {
-		run = 0.0;
 		keyState.w = false;
 	}
 	if (keyup == "s") {
-		run = 0.0;
 		keyState.s = false;
 	}
 	if (keyup == "a") {
-		yam = 0.0;
 		keyState.a = false;
 	}
 	if (keyup == "d") {
-		yam = 0.0;
 		keyState.d = false;
 	}
 	if (keyup == " ") {
