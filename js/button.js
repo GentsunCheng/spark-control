@@ -20,9 +20,9 @@ var ros = null;
 var socket = new net.Socket();
 var publisher = null;
 var cmdVel = null;
-var walk_vel = 0.2;
+var walk_vel = 0.15;
 var run_vel = 2.0;
-var yaw_rate = 0.2;
+var yaw_rate = 0.5;
 var yaw_rate_run = 1.3;
 var yam = 0.0;
 var run = 0.0;
@@ -359,7 +359,6 @@ function handleKeyUp(event) {
 			} else {
 				speed_mod = 1;
 			}
-			sendMessage("");
 			break;
 		//备用状态
 		case "Enter":
