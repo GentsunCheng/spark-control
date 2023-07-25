@@ -311,13 +311,7 @@ function handleKeyDown(event) {
 		case "3":
 			step = 3;
 			sendMessage(50 + step);
-            break;
-        case "5":
-            sendMessage(55);
-            break;
-        case "8":
-            sendMessage(58);
-            break;
+			break;
 		// 第四关节调整
 		case "7":
 			sendMessage(41);
@@ -357,9 +351,15 @@ function handleKeyUp(event) {
 	checkMultipleKeys();
 
 	switch (keyup) {
-		case ".":
+		case "4":
 			step = 0;
 			sendMessage("666");
+			break;
+		case "5":
+			sendMessage(55);
+			break;
+		case "Enter":
+			sendMessage(58);
 			break;
 		case "g":
 			step = 2;
@@ -379,7 +379,7 @@ function handleKeyUp(event) {
 			}
 			break;
 		//备用状态
-		case "Enter":
+		case "+":
 			sendMessage(200);
 			break;
 		//其他状态
