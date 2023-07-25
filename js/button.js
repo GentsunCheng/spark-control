@@ -317,6 +317,7 @@ function handleKeyDown(event) {
             break;
         case "8":
             sendMessage(58);
+            break;
 		// 第四关节调整
 		case "7":
 			sendMessage(41);
