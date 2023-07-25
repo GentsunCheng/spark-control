@@ -300,6 +300,23 @@ function handleKeyDown(event) {
 			if (angle1st > 50) angle1st--;
 			socket.write("angle1st+" + angle1st);
 			break;
+		case "1":
+			step = 1;
+			sendMessage(50 + step);
+			break;
+		case "2":
+			step = 2;
+			sendMessage(50 + step);
+			break;
+		case "3":
+			step = 3;
+			sendMessage(50 + step);
+            break;
+        case "5":
+            sendMessage(55);
+            break;
+        case "8":
+            sendMessage(58);
 		// 第四关节调整
 		case "7":
 			sendMessage(41);
@@ -315,25 +332,25 @@ function handleKeyDown(event) {
 function handleKeyUp(event) {
 	var keyup = event.key;
 
-    if (keyup == "w") {
-        run = 0.0;
+	if (keyup == "w") {
+		run = 0.0;
 		keyState.w = false;
 	}
-    if (keyup == "s") {
-        run = 0.0;
+	if (keyup == "s") {
+		run = 0.0;
 		keyState.s = false;
 	}
-    if (keyup == "a") {
-        yam = 0.0;
+	if (keyup == "a") {
+		yam = 0.0;
 		keyState.a = false;
 	}
-    if (keyup == "d") {
-        yam = 0.0;
+	if (keyup == "d") {
+		yam = 0.0;
 		keyState.d = false;
 	}
-    if (keyup == " ") {
-        run = 0.0;
-        yam = 0.0;
+	if (keyup == " ") {
+		run = 0.0;
+		yam = 0.0;
 		keyState.space = false;
 	}
 	checkMultipleKeys();
@@ -459,6 +476,18 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("层数调整");
+	} else if (data == 55) {
+		const message = new ROSLIB.Message({
+			data: "55",
+		});
+		publisher.publish(message);
+		console.log("方块层数");
+	} else if (data == 58) {
+		const message = new ROSLIB.Message({
+			data: "58",
+		});
+		publisher.publish(message);
+		console.log("关闭气泵");
 	} else if (data == 41) {
 		const message = new ROSLIB.Message({
 			data: "41",
