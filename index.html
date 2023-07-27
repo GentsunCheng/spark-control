@@ -36,7 +36,8 @@
             <span class="black-bold">[Q]断开连接 [R]默认位姿 [Alt]机械臂复位</span>
             <span class="black-bold">[WASD]移动 [Space]刹车 [Shift]切换速度</span>
             <span class="black-bold">[↑↓]切换堆放层数 [←→]调整机械臂转动</span>
-            <span class="black-bold">[G]视觉抓取 [Enter]手动抓取</span>
+            <span class="black-bold">[G]视觉抓取 [+]手动抓取</span>
+            <span class="black-bold">[0]释放方块 [Enter]松开气泵</span>
             <div class="container">
                 <input type="text" class="inputText" id="inputField" placeholder="输入IP">
                 </br>
@@ -48,40 +49,33 @@
                 <div class="direction-buttons">
                     <button class="btn btn-primary" id="upButton">
                         <span class="icon"></span>
-                        <span class="button-text">&#8593;</span>
                     </button>
                 </div>
                 <div class="direction-buttons">
                     <button class="btn btn-primary" id="leftButton">
                         <span class="icon"></span>
-                        <span class="button-text">&#8592;</span>
                     </button>
                     <button class="btn btn-transparent">
                         <span class="icon"></span>
                     </button>
                     <button class="btn btn-primary" id="rightButton">
                         <span class="icon"></span>
-                        <span class="button-text">&#8594;</span>
                     </button>
                 </div>
                 <div class="direction-buttons">
                     <button class="btn btn-primary" id="downButton">
                         <span class="icon"></span>
-                        <span class="button-text">&#8595;</span>
                     </button>
                 </div>
                 <div class="buttons-container">
                     <button class="btn btn-primary" id="grabButton">
                         <span class="icon"></span>
-                        <span class="button-text">抓放</span>
                     </button>
                     <button class="btn btn-primary" id="speedButton">
                         <span class="icon"></span>
-                        <span class="button-text">速度</span>
                     </button>
                     <button class="btn btn-danger" id="resetButton">
                         <span class="icon"></span>
-                        <span class="button-text orange-text">归位</span>
                     </button>
                 </div>
                 </br>
@@ -89,21 +83,17 @@
                     <div class="vertical-buttons">
                         <button class="btn btn-primary" id="arrowUp">
                             <span class="icon"></span>
-                            <span class="button-text">&#9652;</span>
                         </button>
                         <button class="btn btn-primary" id="arrowDown">
                             <span class="icon"></span>
-                            <span class="button-text">&#9662;</span>
                         </button>
                     </div>
                     <div class="horizontal-buttons">
                         <button class="btn btn-primary" id="arrowLeft">
                             <span class="icon"></span>
-                            <span class="button-text">&#9666;</span>
                         </button>
                         <button class="btn btn-primary" id="arrowRight">
                             <span class="icon"></span>
-                            <span class="button-text">&#9654;</span>
                         </button>
                     </div>
                 </div>
