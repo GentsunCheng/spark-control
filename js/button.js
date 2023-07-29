@@ -21,9 +21,9 @@ var socket = new net.Socket();
 var publisher = null;
 var cmdVel = null;
 var walk_vel = 0.15;
-var run_vel = 2.0;
+var run_vel = 3.0;
 var yaw_rate = 0.5;
-var yaw_rate_run = 1.3;
+var yaw_rate_run = 1.5;
 var yam = 0.0;
 var run = 0.0;
 var angle1st = 90.0;
@@ -36,6 +36,7 @@ var keyState = {
 };
 var speed_mod = 1;
 var step = 1;
+var pump_site = "上";
 var constat = "未就绪";
 var wscs = "未就绪";
 // 每隔一定时间执行一次循环体代码
@@ -357,8 +358,11 @@ function handleKeyUp(event) {
 			break;
 		case "5":
 			sendMessage(55);
+			if (pump_site == "上") pump_site = "下";
+			else pump_site = "上";
 			break;
 		case "Enter":
+			pump_site = "上";
 			sendMessage(58);
 			break;
 		case "g":
@@ -367,6 +371,7 @@ function handleKeyUp(event) {
 			sendMessage("g");
 			break;
 		case "0":
+			pump_site = "上";
 			// 执行放置的操作
 			sendMessage("0");
 			break;
@@ -586,6 +591,9 @@ function loopEvent() {
 		"</br>" +
 		"层数: " +
 		step +
+		"</br>" +
+		"气泵: " +
+		pump_site +
 		"</span>";
 }
 
