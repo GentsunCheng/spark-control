@@ -31,30 +31,17 @@
             </br>
             </br>
             </br>
-            </br>
-            </br>
             <span class="black-bold">[Q]断开连接 [R]默认位姿 [Alt]机械臂复位</span>
             <span class="black-bold">[WASD]移动 [Space]刹车 [Shift]切换速度</span>
             <span class="black-bold">[↑↓]切换堆放层数 [←→]调整机械臂转动</span>
             <span class="black-bold">[G]视觉抓取 [+]手动抓取</span>
             <span class="black-bold">[0]释放方块 [Enter]松开气泵</span>
             <div class="container">
-                <input type="text" class="inputText" id="inputField" placeholder="输入IP">
-                </br>
-                <button class="btn btn-success" onclick="updateGlobalVariable()">
-                    <span class="icon"></span>
-                    <span class="button-text-success">连接</span>
-                </button>
+                <input type="text" class="inputText" id="inputField" placeholder="输入IP"
+                    onkeydown="handleEnterKey(event)">
                 <div class="message-box" id="messageBox"></div>
             </div>
         </div>
-    </div>
-    <div class="container2">
-        <iframe id="vnciframe" class="embedded-page" src="about:blank""></iframe>
-        <button class=" btn btn-success" onclick="vncvalue()">
-            <span class="icon"></span>
-            <span class="button-text-success">connect</span>
-            </button>
     </div>
     <script src="js/eventemitter3.js"></script>
     <script src="js/roslib.min.js"></script>

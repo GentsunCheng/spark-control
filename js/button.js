@@ -1,6 +1,5 @@
 const net = require("net");
 
-var vnciframe = document.getElementById("vnciframe");
 var messageBox = document.getElementById("messageBox");
 var ipaddr = "";
 var ros = null;
@@ -29,17 +28,11 @@ var wscs = "未就绪";
 // 每隔一定时间执行一次循环体代码
 var intervalId = setInterval(loopEvent, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
-function vncvalue() {
-	// 获取 iframe 元素
-	var iframe = document.querySelector(".embedded-page");
-	// 获取输入框的值
-	input = document.getElementById("inputField");
-	// 将输入的值赋给全局变量
-	ipaddr = input.value;
-	// 设置 src 属性值为输入的 IP 地址
-	iframe.src = "http://" + ipaddr + ":8080/guacamole";
-	// 打印远程桌面地址
-	console.log("VNC Addr：" + iframe.src);
+function handleEnterKey(event) {
+    if (event.key === 'Enter') {
+        updateGlobalVariable();
+        document.getElementById('inputField').blur();
+    }
 }
 function updateGlobalVariable() {
 	// 获取输入框的值
@@ -236,7 +229,10 @@ function handleKeyUp(event) {
 			step = 0;
 			angle1st = 90.0;
 			socket.write("reset");
-			break;
+            break;
+        case "`":
+            socket.write("noise");
+            break;
 		case "q":
 			disconnect();
 			break;
@@ -443,14 +439,3 @@ loopEvent();
 // 添加键盘按键事件监听器
 document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
-
-// 监听鼠标移入事件
-vnciframe.addEventListener("mouseenter", function () {
-	// 设置 iframe 元素获取焦点
-	vnciframe.contentWindow.focus();
-});
-// 监听鼠标移出事件
-vnciframe.addEventListener("mouseleave", function () {
-	// 设置 iframe 元素失去焦点
-	vnciframe.contentWindow.blur();
-});
