@@ -1,6 +1,6 @@
 {
 	"name": "spark-control",
-	"version": "3.6.1",
+	"version": "5.0.0",
 	"description": "nxrobo-control",
 	"main": "index.js",
 	"scripts": {
