@@ -184,15 +184,21 @@ function handleKeyUp(event) {
 	checkMultipleKeys();
 
 	switch (keyup) {
-		case "4":
+		case ".":
 			step = 0;
 			sendMessage("666");
-			break;
+            break;
+        case "4":
+            sendMessage(114);
+            break;
 		case "5":
 			sendMessage(55);
 			if (pump_site == "上") pump_site = "下";
 			else pump_site = "上";
-			break;
+            break;
+        case "6":
+            sendMessage(514);
+            break;
 		case "Enter":
 			pump_site = "上";
 			sendMessage(58);
@@ -354,6 +360,18 @@ function sendMessage(data) {
 		angle1st = 90.0;
 		publisher.publish(message);
 		console.log("默认位姿");
+	} else if (data == 114) {
+		const message = new ROSLIB.Message({
+			data: "1141",
+		});
+		publisher.publish(message);
+		console.log("114");
+	} else if (data == 514) {
+		const message = new ROSLIB.Message({
+			data: "5141",
+		});
+		publisher.publish(message);
+		console.log("514");
 	} else if (data == "run") {
 		if (speed_mod) {
 			run_data = run * run_vel;
