@@ -8,8 +8,8 @@ var publisher = null;
 var cmdVel = null;
 var walk_vel = 0.15;
 var run_vel = 3.0;
-var yaw_rate = 0.5;
-var yaw_rate_run = 1.5;
+var yaw_walk = 0.5;
+var yaw_run = 1.5;
 var yam = 0.0;
 var run = 0.0;
 var angle1st = 90.0;
@@ -357,10 +357,10 @@ function sendMessage(data) {
 	} else if (data == "run") {
 		if (speed_mod) {
 			run_data = run * run_vel;
-			yam_data = yam * yaw_rate_run;
+			yam_data = yam * yaw_run;
 		} else {
 			run_data = run * walk_vel;
-			yam_data = yam * yaw_rate;
+			yam_data = yam * yaw_walk;
 		}
 		var twist = new ROSLIB.Message({
 			linear: {
@@ -386,7 +386,6 @@ function disconnect() {
 	socket.write("exit");
 	ros.close();
 	socket.close();
-	iframe.src = "about:blank";
 }
 
 // 循环显示状态

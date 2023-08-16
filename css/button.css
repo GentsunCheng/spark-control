@@ -44,50 +44,21 @@
 	outline: none;
 	background-color: rgba(173, 216, 230, 0.5);
 }
-.button-text {
-	position: absolute;
-	transform: translate(-50%, -50%);
-	pointer-events: none;
-	font-weight: bold;
-	opacity: 0.3;
-}
-.button-text-success {
-	position: absolute;
-	transform: translate(-50%, -50%);
-	pointer-events: none;
-	font-weight: bold;
-	opacity: 1;
-}
 .btn {
 	cursor: pointer;
 	width: 80px;
 	height: 40px;
 	border: none;
 	background-color: green;
-	line-height: 50px;
+	line-height: 30px;
 	font-size: 15px;
 	text-align: center;
 	color: rgb(228, 228, 228);
 	border-radius: 50px;
-	opacity: 0.01;
 }
 .btn:focus {
 	outline: none;
 }
-.btn-primary {
-	background-color: blue;
-}
-.btn-success {
-	background-color: rgba(0, 128, 0, 0.75);
-	opacity: 1;
-}
-.btn-warning {
-	background-color: yellow;
-}
-.btn-danger {
-	background-color: red;
-}
-
 .btn:active {
 	transform: scale(0.98);
 	transition-duration: 0.1s;
