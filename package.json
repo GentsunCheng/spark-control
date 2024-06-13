@@ -1,36 +1,16 @@
 {
-	"name": "spark-control",
-	"version": "6.0.0",
-	"description": "nxrobo-control",
-	"main": "index.js",
-	"scripts": {
-		"build": "electron-builder",
-		"start": "electron .",
-		"clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
-	},
-	"author": "GentsunCheng",
-	"license": "GPL-3.0-or-later",
-	"devDependencies": {
-		"electron": "^25.2.0",
-		"electron-builder": "^24.6.3",
-		"electron-packager": "^17.1.1",
-		"electron-winstaller": "^5.1.0"
-	},
-	"build": {
-		"appId": "xyz.orii.electron-spark",
-		"productName": "spark control",
-		"directories": {
-			"output": "dist"
-		},
-		"win": {
-			"icon": "assets/logo.ico"
-		}
-	},
-	"dependencies": {
-		"electron-acrylic-window": "^0.5.11",
-		"electron-cookies": "^1.1.0",
-		"electron-localshortcut": "^3.2.1",
-		"electron-prompt": "^1.7.0",
-		"react-blur": "^1.1.1"
-	}
+  "name": "spark-control",
+  "version": "7.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "electron-builder",
+    "start": "electron .",
+    "clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
+  },
+  "author": "GentsunCheng",
+  "license": "GPLv3",
+  "devDependencies": {
+    "electron": "^31.0.1",
+    "electron-builder": "^24.13.3"
+  }
 }
