@@ -1,6 +1,6 @@
 {
   "name": "spark-control",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "main": "index.js",
   "scripts": {
     "build": "electron-builder",
@@ -8,7 +8,7 @@
     "clean": "rm ./dist/*.exe && rm ./dist/*.blockmap"
   },
   "author": "GentsunCheng",
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "electron": "^31.0.1",
     "electron-builder": "^24.13.3"
