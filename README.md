@@ -5,7 +5,8 @@ Windows
 ## 使用方法
 - 克隆项目到本地
 ```shell
-git clone https://github.com/GentsunCheng/spark-control.git && cd spark-control
+git clone https://github.com/GentsunCheng/spark-control.git
+cd spark-control
 ```
 - 安装node模块
 ```shell
