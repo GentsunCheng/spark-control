@@ -208,6 +208,11 @@ function handleKeyUp(event) {
 			// 执行抓取的操作
 			sendMessage("g");
 			break;
+		case "h":
+			step = 2;
+			// 执行抓取的操作
+			sendMessage("v");
+			break;
 		case "0":
 			pump_site = "上";
 			// 执行放置的操作
@@ -296,6 +301,12 @@ function sendMessage(data) {
 	} else if (data == "ga") {
 		const message = new ROSLIB.Message({
 			data: "0a",
+		});
+		publisher.publish(message);
+		console.log("按键抓取");
+	} else if (data == "v") {
+		const message = new ROSLIB.Message({
+			data: "0v",
 		});
 		publisher.publish(message);
 		console.log("按键抓取");
