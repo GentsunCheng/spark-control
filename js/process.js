@@ -40,6 +40,8 @@ function updateGlobalVariable() {
 	var input = document.getElementById("inputField");
 	// 将输入的值赋给全局变量
 	ipaddr = input.value;
+	// 连接ros视频流
+	document.getElementById('rosvideo').src = "http://" + ipaddr + ":5000/stream?topic=/camera/color/image_raw&amp";
 	// 打印ROS
 	console.log("IP Addr：" + ipaddr);
 	// 初始化ROS
