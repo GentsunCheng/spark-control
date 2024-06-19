@@ -203,6 +203,7 @@ function handleKeyUp(event) {
             sendMessage(514);
             break;
 		case "c":
+		case "Enter":
 			pump_site = "上";
 			sendMessage(58);
 			break;
@@ -217,6 +218,7 @@ function handleKeyUp(event) {
 			sendMessage("v");
 			break;
 		case "f":
+		case "0":
 			pump_site = "上";
 			// 执行放置的操作
 			sendMessage("0");
@@ -230,6 +232,7 @@ function handleKeyUp(event) {
 			}
 			break;
 		//备用状态
+		case "v":
 		case "+":
 			sendMessage(200);
 			break;
