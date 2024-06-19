@@ -4,10 +4,10 @@ const path = require("path");
 // 创建窗口方法
 const createWindow = () => {
 	const menu = Menu.buildFromTemplate([]);
-	Menu.setApplicationMenu(menu);
+	//Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
-		width: 330,
-        height: 500,
+		width: 1000,
+        height: 550,
         blur: true,
 		webPreferences: {
 			webviewTag: true,

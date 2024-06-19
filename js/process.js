@@ -25,6 +25,7 @@ var step = 1;
 var pump_site = "上";
 var constat = "未就绪";
 var wscs = "未就绪";
+let clickCoordinates = { x: 0, y: 0 };
 // 每隔一定时间执行一次循环体代码
 var intervalId = setInterval(loopEvent, 100); // 间隔时间为 100 毫秒
 // 更新全局变量的函数
@@ -463,7 +464,30 @@ function loopEvent() {
 // 调用 loopFunction() 更新状态
 loopEvent();
 
-// 添加事件监听
-// 添加键盘按键事件监听器
+// 添加事件监听器
 document.addEventListener("keydown", handleKeyDown);
 document.addEventListener("keyup", handleKeyUp);
+document.addEventListener("DOMContentLoaded", function() {
+    // 获取图片元素
+    const clickboxElement = document.getElementById("click_box");
+
+    // 添加点击事件监听器
+    clickboxElement.addEventListener("click", function(event) {
+        // 获取点击位置的坐标
+        const rect = clickboxElement.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+		const coordinates = {
+			cmd: "catch",
+            x: x,
+            y: y
+        };
+		const message = new ROSLIB.Message({
+			data: JSON.stringify(coordinates),
+		});
+		console.log(message);
+		publisher.publish(message);
+    });
+});
+

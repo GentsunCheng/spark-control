@@ -1,26 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-
 <head>
     <meta charset="UTF-8">
     <title>Spark_Control</title>
-    <style>
-        @font-face {
-            font-family: "CustomFont";
-            src: url("fonts/pingfang.ttf") format("truetype");
-        }
-
-        * {
-            font-family: "CustomFont", sans-serif;
-        }
-    </style>
     <script src="js/custom-scrollbar.js"></script>
     <link rel="icon" href="assets/logo.ico" type="image/x-icon">
     <link rel="shortcut icon" href="assets/logo.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="css/button.css">
+    <link rel="stylesheet" type="text/css" href="css/all.css">
     <link rel="stylesheet" href="css/font.min.css">
 </head>
-
 <body style="background-color: transparent;">
     <div class="container1">
         <div class="container">
@@ -37,20 +25,20 @@
             <span class="black-bold">[G]蓝色方块 [H]蔬菜方块 [+]手动抓取</span>
             <span class="black-bold">[0]释放方块 [Enter]松开气泵</span>
             <div class="container">
-                <input type="text" class="inputText" id="inputField" placeholder="输入IP"
-                    onkeydown="handleEnterKey(event)">
+                <input type="text" class="inputText" id="inputField" placeholder="输入IP" onkeydown="handleEnterKey(event)">
                 </br>
                 <button class="btn" onclick="updateGlobalVariable()">连接</button>
                 <div class="message-box" id="messageBox"></div>
             </div>
         </div>
     </div>
-    <script src="js/eventemitter3.js"></script>
-    <script src="js/roslib.min.js"></script>
-    <script src="js/button.js"></script>
-    <script src="js/preload.js" preload></script>
-    <script src="js/renderer.js"></script>
-    <script src="index.js"></script>
+    <div class="clickable-box" id="click_box">
+    </div>
 </body>
-
+<script src="js/eventemitter3.js"></script>
+<script src="js/roslib.min.js"></script>
+<script src="js/process.js"></script>
+<script src="js/preload.js" preload></script>
+<script src="js/renderer.js"></script>
+<script src="index.js"></script>
 </html>
