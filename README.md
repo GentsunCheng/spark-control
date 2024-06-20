@@ -10,16 +10,16 @@ cd spark-control
 ```
 - 安装node模块
 ```shell
-npm install -g yarn
-yarn init
-yarn install
+npm install -g pnpm
+pnpm init
+pnpm install
 ```
 - 直接运行
 ```shell
-yarn start
+pnpm start
 ```
 - 构建
 ```shell
-yarn build
+pnpm build
 ```
 构建好的包在项目的 **dist** 目录下
