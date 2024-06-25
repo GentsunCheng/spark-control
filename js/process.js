@@ -36,6 +36,10 @@ function handleEnterKey(event) {
     }
 }
 function updateGlobalVariable() {
+	if(wscs === "已连接") {
+		socket.write("disconnect");
+		wscs === "已断开";
+	}
 	// 获取输入框的值
 	var input = document.getElementById("inputField");
 	// 将输入的值赋给全局变量
@@ -420,9 +424,7 @@ function sendMessage(data) {
 function disconnect() {
 	constat = "已断开";
 	wscs = "已断开";
-	socket.write("exit");
-	ros.close();
-	socket.close();
+	socket.write("disconnect");
 }
 
 // 循环显示状态
