@@ -3,7 +3,7 @@ const net = require("net");
 var messageBox = document.getElementById("messageBox");
 var ipaddr = "";
 var ros = null;
-var socket = new net.Socket();
+var socket = null;
 var publisher = null;
 var cmdVel = null;
 var walk_vel = 0.15;
@@ -36,10 +36,6 @@ function handleEnterKey(event) {
     }
 }
 function updateGlobalVariable() {
-	if(wscs === "已连接") {
-		socket.write("disconnect");
-		wscs === "已断开";
-	}
 	// 获取输入框的值
 	var input = document.getElementById("inputField");
 	// 将输入的值赋给全局变量
@@ -80,22 +76,15 @@ function updateGlobalVariable() {
 	});
 
 	// ARM初始化
-	socket.connect(8801, ipaddr, function () {
-		console.log("Connected to server");
-		socket.write("verify");
-	});
-	// 接收服务端发送的数据
-	socket.on("data", function (data) {
-		console.log("Received: " + data);
-		if (data.toString() === "OK") {
-			wscs = "已连接";
-		}
-	});
-	// 处理错误事件
-	socket.on("error", function (err) {
-		console.log("Error: " + err.message);
-		wscs = "连接错误";
-	});
+	socket = new WebSocket("ws://" + ipaddr + ":8801");
+	socket.onopen = function () {
+		console.log("Connected to WebSocket server.");
+		wscs = "已连接";
+	}
+	socket.onclose = function () {
+	    console.log("Connection to WebSocket server closed.");
+		wscs = "已断开";
+	}
 }
 
 function handleKeyDown(event) {
@@ -133,14 +122,6 @@ function handleKeyDown(event) {
 				step = 1;
 			}
 			sendMessage(50 + step);
-			break;
-		case "ArrowLeft":
-			if (angle1st < 130) angle1st++;
-			socket.write("angle1st+" + angle1st);
-			break;
-		case "ArrowRight":
-			if (angle1st > 50) angle1st--;
-			socket.write("angle1st+" + angle1st);
 			break;
 		case "1":
 			step = 1;
@@ -251,10 +232,7 @@ function handleKeyUp(event) {
 		case "Alt":
 			step = 0;
 			angle1st = 90.0;
-			socket.write("reset");
-            break;
-        case "`":
-            socket.write("noise");
+			socket.send("reset");
             break;
 		case "q":
 			disconnect();
@@ -424,7 +402,7 @@ function sendMessage(data) {
 function disconnect() {
 	constat = "已断开";
 	wscs = "已断开";
-	socket.write("disconnect");
+	socket.close();
 }
 
 // 循环显示状态
