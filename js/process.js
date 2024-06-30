@@ -12,7 +12,6 @@ var yaw_walk = 0.5;
 var yaw_run = 1.5;
 var yam = 0.0;
 var run = 0.0;
-var angle1st = 90.0;
 var keyState = {
 	w: false,
 	s: false,
