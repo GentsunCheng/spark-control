@@ -469,6 +469,7 @@ document.addEventListener("DOMContentLoaded", function() {
             x: x,
             y: y
         };
+		step = 2;
 		const message = new ROSLIB.Message({
 			data: JSON.stringify(coordinates),
 		});
