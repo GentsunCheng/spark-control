@@ -112,7 +112,7 @@ function handleKeyDown(event) {
 			if (step < 3) {
 				step++;
 			}
-			sendMessage(50 + step);
+			sendMessage("set_step");
 			break;
 		case "ArrowDown":
 			if (step > 1) {
@@ -120,19 +120,19 @@ function handleKeyDown(event) {
 			} else if (step <= 0) {
 				step = 1;
 			}
-			sendMessage(50 + step);
+			sendMessage("set_step");
 			break;
 		case "1":
 			step = 1;
-			sendMessage(50 + step);
+			sendMessage("set_step");
 			break;
 		case "2":
 			step = 2;
-			sendMessage(50 + step);
+			sendMessage("set_step");
 			break;
 		case "3":
 			step = 3;
-			sendMessage(50 + step);
+			sendMessage("set_step");
 			break;
 		// 第四关节调整
 		case "7":
@@ -276,11 +276,14 @@ function checkMultipleKeys() {
 // 发送消息到 ROS WebSocket
 function sendMessage(data) {
 	if (data == "g") {
+		const coordinates = {
+			cmd: "grab",
+            type: "blue_square"
+        };
 		const message = new ROSLIB.Message({
-			data: "grab_blue_square",
+			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-		console.log("键盘抓取");
 	} else if (data == "666") {
 		const message = new ROSLIB.Message({
 			data: "666",
@@ -288,11 +291,14 @@ function sendMessage(data) {
 		publisher.publish(message);
 		console.log("666");
 	} else if (data == "v") {
+		const coordinates = {
+			cmd: "grab",
+            type: "vegetable"
+        };
 		const message = new ROSLIB.Message({
-			data: "grab_vegetable",
+			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-		console.log("按键抓取");
 	} else if (data == "0") {
 		const message = new ROSLIB.Message({
 			data: "release",
@@ -305,24 +311,15 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("层数调整");
-	} else if (data == 52) {
+	} else if (data === "set_step") {
+		const coordinates = {
+			cmd: "step",
+            step: step
+        };
 		const message = new ROSLIB.Message({
-			data: "52",
+			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-		console.log("层数调整");
-	} else if (data == 53) {
-		const message = new ROSLIB.Message({
-			data: "53",
-		});
-		publisher.publish(message);
-		console.log("层数调整");
-	} else if (data == 55) {
-		const message = new ROSLIB.Message({
-			data: "pump_up_down",
-		});
-		publisher.publish(message);
-		console.log("方块层数");
 	} else if (data == 58) {
 		const message = new ROSLIB.Message({
 			data: "close_pump",
@@ -355,17 +352,23 @@ function sendMessage(data) {
 		publisher.publish(message);
 		console.log("默认位姿");
 	} else if (data == 114) {
+		const coordinates = {
+			cmd: "sweep",
+            dir: "left"
+        };
 		const message = new ROSLIB.Message({
-			data: "sweep_left",
+			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-		console.log("114");
 	} else if (data == 514) {
+		const coordinates = {
+			cmd: "sweep",
+            dir: "right"
+        };
 		const message = new ROSLIB.Message({
-			data: "sweep_right",
+			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-		console.log("514");
 	} else if (data == "run") {
 		if (speed_mod) {
 			run_data = run * run_vel;
