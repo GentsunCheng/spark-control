@@ -277,7 +277,7 @@ function checkMultipleKeys() {
 function sendMessage(data) {
 	if (data == "g") {
 		const message = new ROSLIB.Message({
-			data: "0",
+			data: "grab_blue_square",
 		});
 		publisher.publish(message);
 		console.log("键盘抓取");
@@ -287,21 +287,15 @@ function sendMessage(data) {
 		});
 		publisher.publish(message);
 		console.log("666");
-	} else if (data == "ga") {
-		const message = new ROSLIB.Message({
-			data: "0a",
-		});
-		publisher.publish(message);
-		console.log("按键抓取");
 	} else if (data == "v") {
 		const message = new ROSLIB.Message({
-			data: "0v",
+			data: "grab_vegetable",
 		});
 		publisher.publish(message);
 		console.log("按键抓取");
 	} else if (data == "0") {
 		const message = new ROSLIB.Message({
-			data: "1",
+			data: "release",
 		});
 		publisher.publish(message);
 		console.log("放置");
@@ -325,50 +319,50 @@ function sendMessage(data) {
 		console.log("层数调整");
 	} else if (data == 55) {
 		const message = new ROSLIB.Message({
-			data: "55",
+			data: "pump_up_down",
 		});
 		publisher.publish(message);
 		console.log("方块层数");
 	} else if (data == 58) {
 		const message = new ROSLIB.Message({
-			data: "58",
+			data: "close_pump",
 		});
 		publisher.publish(message);
 		console.log("关闭气泵");
 	} else if (data == 41) {
 		const message = new ROSLIB.Message({
-			data: "41",
+			data: "pump_left",
 		});
 		publisher.publish(message);
 		console.log("第四关节左");
 	} else if (data == 43) {
 		const message = new ROSLIB.Message({
-			data: "43",
+			data: "pump_right",
 		});
 		publisher.publish(message);
 		console.log("第四关节右");
 	} else if (data == 200) {
 		const message = new ROSLIB.Message({
-			data: "200",
+			data: "spare",
 		});
 		publisher.publish(message);
 		console.log("备用状态抓");
 	} else if (data == 403) {
 		const message = new ROSLIB.Message({
-			data: "403",
+			data: "return",
 		});
 		angle1st = 90.0;
 		publisher.publish(message);
 		console.log("默认位姿");
 	} else if (data == 114) {
 		const message = new ROSLIB.Message({
-			data: "1141",
+			data: "sweep_left",
 		});
 		publisher.publish(message);
 		console.log("114");
 	} else if (data == 514) {
 		const message = new ROSLIB.Message({
-			data: "5141",
+			data: "sweep_right",
 		});
 		publisher.publish(message);
 		console.log("514");
