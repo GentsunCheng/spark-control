@@ -3,7 +3,6 @@ const net = require("net");
 var messageBox = document.getElementById("messageBox");
 var ipaddr = "";
 var ros = null;
-var socket = null;
 var publisher = null;
 var cmdVel = null;
 var walk_vel = 0.15;
@@ -23,7 +22,6 @@ var speed_mod = 1;
 var step = 1;
 var pump_site = "上";
 var constat = "未就绪";
-var wscs = "未就绪";
 let clickCoordinates = { x: 0, y: 0 };
 // 每隔一定时间执行一次循环体代码
 var intervalId = setInterval(loopEvent, 100); // 间隔时间为 100 毫秒
@@ -61,29 +59,24 @@ function updateGlobalVariable() {
 		console.log("Connection to websocket server closed.");
 		constat = "已断开";
 	});
-	// 抓取和释放
+	// 主要逻辑
 	publisher = new ROSLIB.Topic({
 		ros: ros,
 		name: "/grasp",
 		messageType: "std_msgs/String",
 	});
+	// 机械臂复位
+	reset = new ROSLIB.Topic({
+		ros: ros,
+		name: "/armreset",
+		messageType: "std_msgs/String",
+	})
 	// 底盘控制
 	cmdVel = new ROSLIB.Topic({
 		ros: ros,
 		name: "/cmd_vel",
 		messageType: "geometry_msgs/Twist",
 	});
-
-	// ARM初始化
-	socket = new WebSocket("ws://" + ipaddr + ":8801");
-	socket.onopen = function () {
-		console.log("Connected to WebSocket server.");
-		wscs = "已连接";
-	}
-	socket.onclose = function () {
-	    console.log("Connection to WebSocket server closed.");
-		wscs = "已断开";
-	}
 }
 
 function handleKeyDown(event) {
@@ -136,10 +129,10 @@ function handleKeyDown(event) {
 			break;
 		// 第四关节调整
 		case "7":
-			sendMessage(41);
+			sendMessage("pump_left");
 			break;
 		case "9":
-			sendMessage(43);
+			sendMessage("pump_right");
 			break;
 		default:
 			break;
@@ -173,41 +166,37 @@ function handleKeyUp(event) {
 	checkMultipleKeys();
 
 	switch (keyup) {
-		case ".":
-			step = 0;
-			sendMessage("666");
-            break;
         case "4":
-            sendMessage(114);
+            sendMessage("sweep_l");
             break;
 		case "5":
-			sendMessage(55);
+			sendMessage("pump_up_down");
 			if (pump_site == "上") pump_site = "下";
 			else pump_site = "上";
             break;
         case "6":
-            sendMessage(514);
+            sendMessage("sweep_r");
             break;
 		case "c":
 		case "Enter":
 			pump_site = "上";
-			sendMessage(58);
+			sendMessage("close_pump");
 			break;
 		case "g":
 			step = 2;
 			// 执行抓取的操作
-			sendMessage("g");
+			sendMessage("blue_square");
 			break;
 		case "h":
 			step = 2;
 			// 执行抓取的操作
-			sendMessage("v");
+			sendMessage("vegetable");
 			break;
 		case "f":
 		case "0":
 			pump_site = "上";
 			// 执行放置的操作
-			sendMessage("0");
+			sendMessage("release");
 			break;
 		case "Shift":
 			// 速度切换操作
@@ -220,18 +209,18 @@ function handleKeyUp(event) {
 		//备用状态
 		case "v":
 		case "+":
-			sendMessage(200);
+			sendMessage("spare");
 			break;
 		//其他状态
 		case "r":
 			step = 0;
 			angle1st = 90.0;
-			sendMessage(403);
+			sendMessage("return");
 			break;
 		case "Alt":
 			step = 0;
 			angle1st = 90.0;
-			socket.send("reset");
+			sendMessage("reset");
             break;
 		case "q":
 			disconnect();
@@ -275,7 +264,7 @@ function checkMultipleKeys() {
 
 // 发送消息到 ROS WebSocket
 function sendMessage(data) {
-	if (data == "g") {
+	if (data == "blue_square") {
 		const coordinates = {
 			cmd: "grab",
             type: "blue_square"
@@ -284,13 +273,7 @@ function sendMessage(data) {
 			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-	} else if (data == "666") {
-		const message = new ROSLIB.Message({
-			data: "666",
-		});
-		publisher.publish(message);
-		console.log("666");
-	} else if (data == "v") {
+	} else if (data == "vegetable") {
 		const coordinates = {
 			cmd: "grab",
             type: "vegetable"
@@ -299,18 +282,16 @@ function sendMessage(data) {
 			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-	} else if (data == "0") {
+	} else if (data == "release") {
 		const message = new ROSLIB.Message({
 			data: "release",
 		});
 		publisher.publish(message);
-		console.log("放置");
-	} else if (data == 51) {
+	} else if (data == "pump_up_down") {
 		const message = new ROSLIB.Message({
-			data: "51",
+			data: "pump_up_down",
 		});
 		publisher.publish(message);
-		console.log("层数调整");
 	} else if (data === "set_step") {
 		const coordinates = {
 			cmd: "step",
@@ -320,38 +301,38 @@ function sendMessage(data) {
 			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-	} else if (data == 58) {
+	} else if (data == "close_pump") {
 		const message = new ROSLIB.Message({
 			data: "close_pump",
 		});
 		publisher.publish(message);
-		console.log("关闭气泵");
-	} else if (data == 41) {
+	} else if (data == "pump_left") {
 		const message = new ROSLIB.Message({
 			data: "pump_left",
 		});
 		publisher.publish(message);
-		console.log("第四关节左");
-	} else if (data == 43) {
+	} else if (data == "pump_right") {
 		const message = new ROSLIB.Message({
 			data: "pump_right",
 		});
 		publisher.publish(message);
-		console.log("第四关节右");
-	} else if (data == 200) {
+	} else if (data == "spare") {
 		const message = new ROSLIB.Message({
 			data: "spare",
 		});
 		publisher.publish(message);
-		console.log("备用状态抓");
-	} else if (data == 403) {
+	} else if (data == "return") {
 		const message = new ROSLIB.Message({
 			data: "return",
 		});
 		angle1st = 90.0;
 		publisher.publish(message);
-		console.log("默认位姿");
-	} else if (data == 114) {
+	} else if (data === "reset") {
+		const message = new ROSLIB.Message({
+			data: "reset",
+		});
+		reset.publish(message);
+	} else if (data == "sweep_l") {
 		const coordinates = {
 			cmd: "sweep",
             dir: "left"
@@ -360,7 +341,7 @@ function sendMessage(data) {
 			data: JSON.stringify(coordinates),
 		});
 		publisher.publish(message);
-	} else if (data == 514) {
+	} else if (data == "sweep_r") {
 		const coordinates = {
 			cmd: "sweep",
             dir: "right"
@@ -390,20 +371,17 @@ function sendMessage(data) {
 			},
 		});
 		cmdVel.publish(twist);
-		console.log(run_data + " " + yam_data);
 	}
 }
 
 // 断开连接函数
 function disconnect() {
 	constat = "已断开";
-	wscs = "已断开";
-	socket.close();
 }
 
 // 循环显示状态
 function loopEvent() {
-	let ROScolor, ARMcolor;
+	let ROScolor;
 	if (constat === "未就绪") {
 		ROScolor = "color: blue;";
 	} else if (constat === "已连接") {
@@ -415,23 +393,10 @@ function loopEvent() {
 	} else {
 		ROScolor = "";
 	}
-	if (wscs === "未就绪") {
-		ARMcolor = "color: blue;";
-	} else if (wscs === "已连接") {
-		ARMcolor = "color: green;";
-	} else if (wscs === "已断开") {
-		ARMcolor = "color: orange;";
-	} else if (wscs === "连接错误") {
-		ARMcolor = "color: red;";
-	} else {
-		ARMcolor = "";
-	}
 
 	// 更新 ROS 连接状态元素的内容和样式
 	const rosStatusElement = document.getElementById("rosStatus");
-	const armStatusElement = document.getElementById("armStatus");
 	rosStatusElement.innerHTML = `ROS状态:<span style="${ROScolor}">${constat}</span>`;
-	armStatusElement.innerHTML = `ARM状态:<span style="${ARMcolor}">${wscs}</span>`;
 	messageBox.innerHTML =
 		"<span style='font-weight: bold;'>速度: " +
 		speed_mod +
