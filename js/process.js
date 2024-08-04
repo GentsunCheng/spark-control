@@ -65,12 +65,6 @@ function updateGlobalVariable() {
 		name: "/grasp",
 		messageType: "std_msgs/String",
 	});
-	// 机械臂复位
-	reset = new ROSLIB.Topic({
-		ros: ros,
-		name: "/armreset",
-		messageType: "std_msgs/String",
-	})
 	// 底盘控制
 	cmdVel = new ROSLIB.Topic({
 		ros: ros,
@@ -218,8 +212,6 @@ function handleKeyUp(event) {
 			sendMessage("return");
 			break;
 		case "Alt":
-			step = 0;
-			angle1st = 90.0;
 			sendMessage("reset");
             break;
 		case "q":
@@ -331,7 +323,7 @@ function sendMessage(data) {
 		const message = new ROSLIB.Message({
 			data: "reset",
 		});
-		reset.publish(message);
+		publisher.publish(message);
 	} else if (data == "sweep_l") {
 		const coordinates = {
 			cmd: "sweep",
