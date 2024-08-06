@@ -1,6 +1,6 @@
 {
   "name": "spark-control",
-  "version": "7.5.0",
+  "version": "7.5.1",
   "main": "index.js",
   "scripts": {
     "build": "electron-builder",

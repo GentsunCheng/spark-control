@@ -420,8 +420,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 		const coordinates = {
 			cmd: "catch",
-            x: x / 2,
-            y: y / 2
+            x: x / 1.5,
+            y: y / 1.5
         };
 		step = 2;
 		const message = new ROSLIB.Message({

@@ -6,8 +6,8 @@ const createWindow = () => {
 	const menu = Menu.buildFromTemplate([]);
 	Menu.setApplicationMenu(menu);
 	const win = new BrowserWindow({
-		width: 1650,
-        height: 1600,
+		width: 1350,
+        height: 800,
         blur: true,
 		webPreferences: {
 			webviewTag: true,
