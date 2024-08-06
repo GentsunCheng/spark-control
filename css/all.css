@@ -88,8 +88,8 @@
     border-radius: 20px;
 }
 .clickable-box {
-    width: 640px;
-    height: 480px;
+    width: 1280px;
+    height: 960px;
     border: 1px solid black;
     position: absolute;
     top: 50%;
