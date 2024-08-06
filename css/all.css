@@ -97,6 +97,11 @@
 	border-radius: 10px;
     transform: translateY(-50%);
 }
+.rosimg {
+    height: 100%;
+    width: 100%;
+	border-radius: 10px;
+}
 .md3-select {
     position: relative;
     width: 100%;

@@ -1,6 +1,9 @@
 const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
 
+// 设置应用图标
+const iconPath = path.join(__dirname, "assets/logo.ico");
+
 // 创建窗口方法
 const createWindow = () => {
 	const menu = Menu.buildFromTemplate([]);
@@ -22,15 +25,10 @@ const createWindow = () => {
     win.show();
 };
 
-// 设置应用图标
-const iconPath = path.join(__dirname, "assets/logo.ico");
+// 在 app 就绪后创建窗口
 app.whenReady().then(() => {
 	if (app.isReady() && app.dock) {
 		app.dock.setIcon(iconPath);
 	}
-});
-
-// 在 app 就绪后创建窗口
-app.whenReady().then(() => {
 	createWindow();
 });
